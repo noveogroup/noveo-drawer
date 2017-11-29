@@ -1,0 +1,32 @@
+ext.noveoDrawer = [
+        who   : "BUILD_SOURCE",
+        date  : "BUILD_DATE",
+        builderInfo : this.&extractApkBuilderInfo,
+        buildDate: this.&extractBuildDate
+]
+
+def extractApkBuilderInfo() {
+    def buildSource
+    try {
+        def git_hash = "git rev-parse --short HEAD".execute().text.trim()
+        if (project.hasProperty("teamcity")) {
+            def buildNumber = teamcity['build.number']
+            buildSource = "tc: #$buildNumber (commit: #$git_hash)"
+        } else {
+            buildSource = "git: #$git_hash"
+        }
+    } catch (ignored) {
+        println "Git not found"
+        buildSource = "unknown"
+    }
+    return asBuildConfigParam(buildSource)
+}
+
+@SuppressWarnings("GrMethodMayBeStatic")
+def extractBuildDate() {
+    return asBuildConfigParam(new Date().format('dd.MM.yyyy HH:mm:ss Z'))
+}
+
+static def asBuildConfigParam(prop) {
+    return "\"$prop\"";
+}

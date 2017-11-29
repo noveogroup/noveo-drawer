@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+apply from: 'drawer.gradle'
+
+android {
+    compileSdkVersion sdkVersions.compileSdk
+
+    defaultConfig {
+        applicationId "com.example.sample"
+        minSdkVersion sdkVersions.minSdk
+        targetSdkVersion sdkVersions.targetSdk
+        versionCode buildVersions.code
+        versionName buildVersions.name
+        buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
+        buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
+    }
+
+    buildTypes {
+        debug {
+        }
+        release {
+            signingConfig debug.signingConfig
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation libraries.supportLibrary
+    implementation libraries.supportAppCompat
+
+    implementation libraries.debugDrawerCommons
+    implementation project(':drawer')
+}

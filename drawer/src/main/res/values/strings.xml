@@ -1,0 +1,10 @@
+<resources>
+    <string name="dd_undefined">Undefined</string>
+
+    <string name="dd_alert_restart_title">Warning!</string>
+    <string name="dd_alert_restart_message">To apply new settings application should be restarted</string>
+    <string name="dd_alert_restart_property_message">Are you sure you want to %1$s %2$s. \n\n Restart the application to apply new settings!</string>
+    <string name="dd_alert_restart_url_message">Are you sure you want to change endpoint from \n\n %1$s \n\n to \n\n %2$s \n\nRestart the application to apply new settings!</string>
+    <string name="dd_alert_restart_cancel">Cancel</string>
+    <string name="dd_alert_restart_ok">Restart</string>
+</resources>

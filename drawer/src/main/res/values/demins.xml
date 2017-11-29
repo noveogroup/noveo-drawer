@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dd_tiny">12dp</dimen>
+    <dimen name="dd_small">14dp</dimen>
+    <dimen name="dd_large">22dp</dimen>
+    <dimen name="dd_divider_height">1dp</dimen>
+</resources>
