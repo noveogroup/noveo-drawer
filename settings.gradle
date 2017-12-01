@@ -1,1 +1,1 @@
-include ':drawer', ':sample'
+include ':debugdrawer', ':sample'

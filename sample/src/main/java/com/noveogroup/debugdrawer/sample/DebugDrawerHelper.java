@@ -2,9 +2,12 @@ package com.noveogroup.debugdrawer.sample;
 
 import android.app.Activity;
 import android.app.Application;
+import android.support.annotation.StyleRes;
 
 import com.facebook.stetho.Stetho;
+import com.noveogroup.debugdrawer.api.NoveoDebugDrawer;
 import com.noveogroup.debugdrawer.api.NoveoDebugDrawerConfig;
+import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
 import com.noveogroup.debugdrawer.data.model.Enabler;
 import com.noveogroup.debugdrawer.data.model.SelectorDto;
 import com.noveogroup.debugdrawer.module.EnablerModule;
@@ -74,10 +77,27 @@ public final class DebugDrawerHelper {
                 .build();
     }
 
+    @StyleRes
+    public static int getSelectedTheme() {
+        final String name = getSelector().getSelectorValue(SELECTOR_THEME);
+        return Theme.valueOf(name).themeId;
+    }
+
+    private static SelectorProvider getSelector() {
+        return NoveoDebugDrawer.getSelectorProvider();
+    }
+
     public enum Theme {
-        LIGHT,
-        DARK,
-        CUSTOM
+        LIGHT(R.style.AppTheme),
+        DARK(R.style.DarkAppTheme),
+        CUSTOM(R.style.CustomAppTheme);
+
+        @StyleRes
+        public final int themeId;
+
+        Theme(@StyleRes final int themeId) {
+            this.themeId = themeId;
+        }
     }
 
 }

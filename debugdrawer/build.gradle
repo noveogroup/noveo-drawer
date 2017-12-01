@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: "com.noveogroup.android.check"
 
+apply from: 'config.gradle'
+project.archivesBaseName = ext.artifactId
+description = 'Modules to switch configuration using single apk file'
+
 android {
     compileSdkVersion sdkVersions.compileSdk
     buildToolsVersion sdkVersions.buildTools
@@ -76,3 +80,6 @@ check {
     pmd { config rootProject.file('analyzers/pmd.xml').absolutePath }
     findbugs { skip true }
 }
+
+apply from: 'androidmaven.gradle'
+apply from: 'bintray.gradle'

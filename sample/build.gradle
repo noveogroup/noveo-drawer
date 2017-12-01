@@ -56,7 +56,7 @@ dependencies {
     implementation libraries.butterKnife
     annotationProcessor libraries.butterKnifeCompiler
 
-    implementation project(':drawer')
+    implementation project(':debugdrawer')
     implementation libraries.debugDrawerCommons
     implementation libraries.stetho
     debugImplementation libraries.leakCanary

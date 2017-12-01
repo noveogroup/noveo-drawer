@@ -1,6 +1,6 @@
 ext.versions = [
         /*GRADLE DEPENDENCIES*/
-        androidGradlePlugin        : "3.0.0",
+        androidGradlePlugin        : "3.0.1",
         noveoCheckPlugin           : "1.2.4",
 
         /*APPLICATION DEPENDENCIES*/
