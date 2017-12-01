@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: "com.noveogroup.android.check"
 apply from: 'drawer.gradle'
 
 android {
     compileSdkVersion sdkVersions.compileSdk
 
     defaultConfig {
-        applicationId "com.example.sample"
+        applicationId "com.noveogroup.debugdrawer.sample"
         minSdkVersion sdkVersions.minSdk
         targetSdkVersion sdkVersions.targetSdk
         versionCode buildVersions.code
@@ -24,6 +25,19 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError true
+        checkAllWarnings true
+        disable "AllowBackup"
+        disable "ContentDescription"
+        disable "InvalidPackage"
+        disable "SpUsage"
+        disable "IconMissingDensityFolder"
+        disable "SelectableText"
+        disable "RtlCompat", "RtlEnabled", "RtlHardcoded", "RtlSymmetry"
+        disable "MissingPrefix"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -34,7 +48,24 @@ android {
 dependencies {
     implementation libraries.supportLibrary
     implementation libraries.supportAppCompat
+    implementation libraries.slf4j
+    implementation libraries.logbackCore
+    implementation(libraries.logbackClassic) {
+        exclude group: "com.google.android", module: "android"
+    }
+    implementation libraries.butterKnife
+    annotationProcessor libraries.butterKnifeCompiler
 
-    implementation libraries.debugDrawerCommons
     implementation project(':drawer')
+    implementation libraries.debugDrawerCommons
+    implementation libraries.stetho
+    debugImplementation libraries.leakCanary
+    releaseImplementation libraries.leakCanaryNoOp
+}
+
+check {
+    abortOnError true
+    checkstyle { config rootProject.file('analyzers/checkstyle.xml').absolutePath }
+    pmd { config rootProject.file('analyzers/pmd.xml').absolutePath }
+    findbugs { skip true }
 }

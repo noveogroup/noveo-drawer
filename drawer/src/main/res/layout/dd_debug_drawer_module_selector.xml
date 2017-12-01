@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/dd_tiny"
+    android:padding="@dimen/dd_small"
+    android:paddingBottom="@dimen/dd_small"
+    android:paddingLeft="@dimen/dd_small"
+    android:paddingRight="@dimen/dd_small"
     tools:background="@android:color/background_dark"
     tools:ignore="UselessParent,HardcodedText">
 
@@ -15,14 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:text="Endpoint"/>
-
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/dd_debug_tools_spinner_server"
-        style="@style/NoveoDebugDrawer.SpinnerStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        app:theme="@style/NoveoDebugDrawer.SpinnerStyle"/>
+        android:text="Selector"/>
 
 </LinearLayout>

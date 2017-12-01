@@ -1,92 +1,133 @@
 package com.noveogroup.debugdrawer.domain;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
-import com.facebook.stetho.Stetho;
-import com.noveogroup.debugdrawer.api.Initializer;
-import com.noveogroup.debugdrawer.data.canary.LeakCanaryProxy;
-import com.noveogroup.debugdrawer.data.model.Endpoint;
+import com.noveogroup.debugdrawer.Utils;
+import com.noveogroup.debugdrawer.api.provider.EnablerProvider;
+import com.noveogroup.debugdrawer.api.provider.GradleProvider;
+import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
+import com.noveogroup.debugdrawer.data.model.BuildConfigDto;
+import com.noveogroup.debugdrawer.data.model.Enabler;
+import com.noveogroup.debugdrawer.data.model.SelectorDto;
 import com.noveogroup.debugdrawer.data.preferences.DeveloperPreferences;
-import com.squareup.leakcanary.LeakCanary;
+import com.noveogroup.preferences.api.RxPreference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Completable;
+import io.reactivex.functions.Action;
 
-public class DeveloperSettingsManager {
+public class DeveloperSettingsManager implements EnablerProvider, SelectorProvider, GradleProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeveloperSettingsManager.class);
+    private final BuildConfigDto buildConfig;
 
     private final DeveloperPreferences developerPreferences;
 
-    private final LeakCanaryProxy leakCanaryProxy;
-
-    private final AtomicBoolean stetho = new AtomicBoolean(false);
-    private final AtomicBoolean leakCanary = new AtomicBoolean(false);
-
-    private final Initializer<Stetho> stethoInitializer;
-    private final Initializer<LeakCanary> leakCanaryInitializer;
+    private final Map<String, SingleInitializer> enablerMap = new LinkedHashMap<>();
+    private final Map<String, Pair<SelectorDto, SingleInitializer>> selectorMap = new LinkedHashMap<>();
 
     public DeveloperSettingsManager(final Context context,
-                                    final Initializer<Stetho> stethoInitializer, final Initializer<LeakCanary> leakCanaryInitializer) {
+                                    final BuildConfigDto helper,
+                                    final List<SelectorDto> properties,
+                                    final List<Enabler> enablers) {
+        this.buildConfig = helper;
         this.developerPreferences = new DeveloperPreferences(context.getApplicationContext());
-        this.leakCanaryProxy = new LeakCanaryProxy();
-        this.stethoInitializer = stethoInitializer;
-        this.leakCanaryInitializer = leakCanaryInitializer;
-        apply();
+
+        for (final SelectorDto selectorDto : properties) {
+            this.selectorMap.put(selectorDto.getName(), new Pair<>(selectorDto, new SingleInitializer(() -> {
+                final RxPreference<String> preference = developerPreferences.getSelectorByName(selectorDto.getName());
+                if (!preference.read().blockingGet().isPresent()) {
+                    final String initialValue = selectorDto.getValues().iterator().next();
+                    preference.save(initialValue).subscribe();
+                }
+            })));
+        }
+
+        for (final Enabler enabler : enablers) {
+            enablerMap.put(enabler.getName(), new SingleInitializer(
+                    () -> enabler.initialize(isEnablerEnabled(enabler.getName()))));
+        }
+
+        applyEnablers();
+        applySelectors();
     }
 
-    public DeveloperPreferences getDeveloperPreferences() {
-        return developerPreferences;
+    public Set<String> getEnablers() {
+        return enablerMap.keySet();
     }
 
-    public LeakCanaryProxy getLeakCanaryProxy() {
-        return leakCanaryProxy;
+    @Override
+    public Set<String> getSelectors() {
+        return selectorMap.keySet();
     }
 
-    public final boolean isStethoEnabled() {
-        return developerPreferences.stethoEnabled.read()
+    @Override
+    public final boolean isEnablerEnabled(final String name) {
+        return developerPreferences.getEnablerByName(name).read()
                 .blockingGet().orElse(false);
     }
 
-    public final boolean isLeakCanaryEnabled() {
-        return developerPreferences.leakCanaryEnabled.read()
-                .blockingGet().orElse(false);
-    }
-
-    public Completable enableStetho(final boolean enabled) {
-        return developerPreferences.stethoEnabled.save(enabled)
-                .doOnComplete(this::apply);
-    }
-
-    public Completable enableLeakCanary(final boolean enabled) {
-        return developerPreferences.leakCanaryEnabled.save(enabled)
-                .doOnComplete(this::apply);
-    }
-
-    @Nullable
-    public Endpoint readEndpoint() {
-        return developerPreferences.backendUrl.read()
+    @Override
+    public String getSelectorValue(final String name) {
+        return developerPreferences.getSelectorByName(name).read()
                 .blockingGet().orElse(null);
     }
 
-    public Completable changeEndpoint(final Endpoint endpoint) {
-        return developerPreferences.backendUrl.save(endpoint);
+    public List<String> getSelectorValues(final String name) {
+        return new ArrayList<>(selectorMap.get(name).first.getValues());
     }
 
-    private void apply() {
-        if (stetho.compareAndSet(false, true) && isStethoEnabled()) {
-            LOGGER.info("stetho initialized");
-            stethoInitializer.initialize(Stetho.class);
+    public Completable enableEnabler(final String name, final boolean enabled) {
+        return developerPreferences.getEnablerByName(name).save(enabled)
+                .doOnComplete(this::applyEnablers);
+    }
+
+    public Completable changeSelector(final String name, final String value) {
+        return developerPreferences.getSelectorByName(name).save(value)
+                .doOnComplete(this::applySelectors);
+    }
+
+    public final void applyEnablers() {
+        for (final String name : enablerMap.keySet()) {
+            enablerMap.get(name).initializeIfRequired();
+        }
+    }
+
+    public final void applySelectors() {
+        for (final String name : selectorMap.keySet()) {
+            selectorMap.get(name).second.initializeIfRequired();
+        }
+    }
+
+    @Override
+    public BuildConfigDto getBuildConfig() {
+        return buildConfig;
+    }
+
+    class SingleInitializer {
+        final AtomicBoolean isInitialized;
+        final Action action;
+
+        SingleInitializer(final Action action) {
+            this.isInitialized = new AtomicBoolean();
+            this.action = action;
         }
 
-        if (leakCanary.compareAndSet(false, true) && isLeakCanaryEnabled()) {
-            LOGGER.info("leak canary initialized");
-            leakCanaryInitializer.initialize(LeakCanary.class);
+        @SuppressWarnings("PMD.AvoidCatchingGenericException")
+        void initializeIfRequired() {
+            if (isInitialized.compareAndSet(false, true)) {
+                try {
+                    action.run();
+                } catch (Exception e) {
+                    Utils.sneakyThrow(e);
+                }
+            }
         }
     }
 

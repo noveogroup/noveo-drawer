@@ -23,16 +23,24 @@ android {
     }
 
     lintOptions {
-        abortOnError false
+        abortOnError true
         checkAllWarnings true
         disable "AllowBackup"
         disable "ContentDescription"
         disable "InvalidPackage"
+        disable "RequiredSize"
         disable "SpUsage"
         disable "IconMissingDensityFolder"
         disable "SelectableText"
         disable "RtlCompat", "RtlEnabled", "RtlHardcoded", "RtlSymmetry"
         disable "MissingPrefix"
+    }
+
+    sourceSets {
+        main.res.srcDirs = [
+                'src/main/res',
+                'src/main/res-public'
+        ]
     }
 
     compileOptions {
@@ -52,16 +60,12 @@ dependencies {
     implementation libraries.rxJava2
 
     /* Useful libraries */
-    api libraries.stetho
     implementation libraries.streamSupport
     implementation libraries.noveoPreferences
     implementation libraries.phoenix
 
     debugApi libraries.debugDrawer
     releaseApi libraries.debugDrawerNoOp
-
-    debugApi libraries.leakCanary
-    releaseApi libraries.leakCanaryNoOp
     debugApi libraries.debugDrawerView
     releaseApi libraries.debugDrawerViewNoOp
 }

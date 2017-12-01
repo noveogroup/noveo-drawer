@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:columnCount="2"
-    android:padding="@dimen/dd_tiny"
+    android:padding="@dimen/dd_small"
     tools:background="@android:color/background_dark"
     tools:ignore="UselessParent,HardcodedText,SpUsage">
 
@@ -37,7 +37,7 @@
         style="@style/Widget.DebugDrawer.Base.RowValue"
         android:layout_width="0dp"
         android:layout_gravity="start|center_vertical|fill_horizontal"
-        android:textSize="@dimen/dd_small"/>
+        android:textSize="@dimen/dd_normal"/>
 
     <TextView
         style="@style/Widget.DebugDrawer.Base.RowTitle"

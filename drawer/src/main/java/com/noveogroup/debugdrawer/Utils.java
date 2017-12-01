@@ -1,15 +1,24 @@
 package com.noveogroup.debugdrawer;
 
-import com.noveogroup.debugdrawer.api.NoveoDebugDrawer;
-
 import org.slf4j.Logger;
 
 import java.util.Collection;
 
 @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
 public final class Utils {
+
+    private static boolean debug;
+
     private Utils() {
         //empty utility constructor
+    }
+
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    public static void setDebug(final boolean debug) {
+        Utils.debug = debug;
     }
 
     @SafeVarargs
@@ -30,7 +39,7 @@ public final class Utils {
     }
 
     public static void log(final Logger logger, final String message, final Object... args) {
-        if (NoveoDebugDrawer.isDebug()) {
+        if (debug) {
             logger.debug(message, args);
         }
     }

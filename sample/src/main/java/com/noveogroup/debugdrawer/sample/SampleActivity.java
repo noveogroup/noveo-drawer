@@ -1,32 +1,30 @@
-package com.example.sample;
+package com.noveogroup.debugdrawer.sample;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.noveogroup.debugdrawer.api.NoveoDebugDrawer;
-import com.noveogroup.debugdrawer.api.provider.InspectionProvider;
-import com.noveogroup.debugdrawer.data.model.Endpoint;
+import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.palaima.debugdrawer.DebugDrawer;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class SampleActivity extends AppCompatActivity {
 
+    @BindView(R.id.server)
+    TextView server;
     private DebugDrawer drawer;
-    private TextView server;
-    private TextView stetho;
-    private TextView canary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(SampleApplication.themeId);
         setContentView(R.layout.activity_main);
-
-        server = findViewById(R.id.server);
-        stetho = findViewById(R.id.stetho);
-        canary = findViewById(R.id.canary);
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             drawer = DebugDrawerHelper.makeDrawer(this);
@@ -39,12 +37,11 @@ public class SampleActivity extends AppCompatActivity {
         super.onStart();
         drawer.onStart();
 
-        final Endpoint endpoint = NoveoDebugDrawer.getEndpointProvider().getEndpoint();
-        server.setText("Endpoint: " + (endpoint != null ? endpoint.getUrl() : "null"));
+        final SelectorProvider selectorProvider = NoveoDebugDrawer.getSelectorProvider();
+        server.setText(
+                "Endpoint: " + selectorProvider.getSelectorValue(DebugDrawerHelper.SELECTOR_ENDPOINT) + "\n" +
+                        "Theme: " + selectorProvider.getSelectorValue(DebugDrawerHelper.SELECTOR_THEME));
 
-        final InspectionProvider inspections = NoveoDebugDrawer.getInspectionProvider();
-        stetho.setText(inspections.isStethoEnabled() ? "enabled" : "disabled");
-        canary.setText(inspections.isLeakCanaryEnabled() ? "enabled" : "disabled");
     }
 
     @Override

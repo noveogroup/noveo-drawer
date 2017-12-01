@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/Widget.DebugDrawer.Base.RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dd_normal"
+        android:textAllCaps="true"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        style="@style/NoveoDebugDrawer.Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="4dp"
+        android:gravity="start"
+        android:spinnerMode="dialog"
+        app:backgroundTint="@android:color/white"/>
+
+</merge>

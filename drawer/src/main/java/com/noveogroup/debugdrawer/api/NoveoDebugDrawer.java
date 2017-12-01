@@ -1,64 +1,58 @@
 package com.noveogroup.debugdrawer.api;
 
-import com.noveogroup.debugdrawer.Utils;
-import com.noveogroup.debugdrawer.api.provider.EndpointProvider;
-import com.noveogroup.debugdrawer.api.provider.InspectionProvider;
+import android.content.Context;
 
+import com.noveogroup.debugdrawer.Utils;
+import com.noveogroup.debugdrawer.api.provider.EnablerProvider;
+import com.noveogroup.debugdrawer.api.provider.GradleProvider;
+import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
+import com.noveogroup.preferences.NoveoPreferences;
+
+import java.util.Set;
+import java.util.TreeSet;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class NoveoDebugDrawer {
 
-    private static InspectionProvider inspectionProvider;
-    private static EndpointProvider endpointProvider;
-
+    private static final Set<String> MODULES = new TreeSet<>();
     @SuppressWarnings("StaticFieldLeak")
-    static NoveoDrawerConfig config;
-    private static boolean debug;
+    public static NoveoDebugDrawerConfig config;
 
     private NoveoDebugDrawer() {
     }
 
-    /**
-     * if true - library will use @Slf4j {@link org.slf4j.Logger} to write logs.
-     *
-     * @return true if enabled. false otherwise.
-     */
-    @SuppressWarnings("unused")
-    public static boolean isDebug() {
-        return debug;
-    }
-
-    /**
-     * Enabled logging with @Slf4j {@link org.slf4j.Logger}
-     *
-     * @param debug boolean to enable.
-     */
-    public static void setDebug(final boolean debug) {
-        NoveoDebugDrawer.debug = debug;
-    }
-
-    public static void init(final NoveoDrawerConfig configuration) {
-        if (config == null) {
-            config = configuration;
+    public static void init(final NoveoDebugDrawerConfig config) {
+        if (NoveoDebugDrawer.config == null) {
+            NoveoDebugDrawer.config = config;
+            Utils.setDebug(config.isDebugEnabled());
+            NoveoPreferences.setDebug(config.isDebugEnabled());
             return;
         }
         Utils.sneakyThrow(new RuntimeException("NoveoDebugDrawer can't be initialized twice"));
     }
 
-    public static InspectionProvider getInspectionProvider() {
-        synchronized (NoveoDebugDrawer.class) {
-            if (inspectionProvider == null) {
-                inspectionProvider = new InspectionProvider(config.getSettings());
-            }
-        }
-        return inspectionProvider;
+    public static void init(final Context context) {
+        init(NoveoDebugDrawerConfig.builder(context).build());
     }
 
-    public static EndpointProvider getEndpointProvider() {
-        synchronized (NoveoDebugDrawer.class) {
-            if (endpointProvider == null) {
-                endpointProvider = new EndpointProvider(config.getSettings());
-            }
+    public static GradleProvider getApplicationProvider() {
+        return config.getSettings();
+    }
+
+    public static EnablerProvider getInspectionProvider() {
+        return config.getSettings();
+    }
+
+    public static SelectorProvider getSelectorProvider() {
+        return config.getSettings();
+    }
+
+    static void registerModule(final SupportDebugModule debugModule) {
+        final String name = debugModule.getClass().getName();
+        if (Utils.isDebug() && !MODULES.contains(name)) {
+            MODULES.add(name);
+            Utils.log(debugModule.logger, debugModule.getDebugInfo());
         }
-        return endpointProvider;
     }
 
 }
