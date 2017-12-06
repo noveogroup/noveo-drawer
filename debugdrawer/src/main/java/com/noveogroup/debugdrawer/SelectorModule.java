@@ -1,4 +1,4 @@
-package com.noveogroup.debugdrawer.module;
+package com.noveogroup.debugdrawer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,29 +13,27 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.noveogroup.debugdrawer.R;
-import com.noveogroup.debugdrawer.Utils;
-import com.noveogroup.debugdrawer.api.SupportDebugModule;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @SuppressWarnings({"PMD.AvoidThrowingNullPointerException", "WeakerAccess"})
 public class SelectorModule extends SupportDebugModule {
 
-    private final Map<String, SelectorViewHolder> holders = new LinkedHashMap<>();
+    final Map<String, SelectorViewHolder> holders;
+    final DrawerSelectorSettings selectorSettings;
 
     public SelectorModule() {
         super();
-        final Set<String> properties = getSettings().getSelectors();
-        if (Utils.isEmpty(properties)) {
+        this.holders = new LinkedHashMap<>();
+        this.selectorSettings = getSelectorSettings();
+
+        if (Utils.isEmpty(selectorSettings.names())) {
             throw new NullPointerException("Selectors not found. " +
                     "Please add any with NoveoDebugDrawer.init(NoveoDebugDrawerConfig.builder().addSelectors())");
         }
 
-        getSettings().applySelectors();
+        selectorSettings.applyInitial();
     }
 
     @SuppressLint("SetTextI18n")
@@ -47,18 +45,17 @@ public class SelectorModule extends SupportDebugModule {
         gridLayout.setClickable(false);
         gridLayout.setEnabled(false);
 
-        final Set<String> selectors = getSettings().getSelectors();
-        for (final String name : selectors) {
+        for (final String name : selectorSettings.names()) {
             inflater.inflate(R.layout.dd_item_selector_include, gridLayout, true);
 
             final SelectorViewHolder holder = new SelectorViewHolder(gridLayout);
-            final List<String> values = getSettings().getSelectorValues(name);
+            final List<String> values = selectorSettings.values(name);
 
             holder.name.setText(name + ":");
             holder.spinner.setAdapter(new ArrayAdapter<String>(context, R.layout.dd_spinner_selected, values) {
                 @Override
                 public View getDropDownView(final int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
-                    final String selected = getSettings().getSelectorValue(name);
+                    final String selected = selectorSettings.read(name);
                     final TextView itemView = (TextView) LayoutInflater.from(context).inflate(R.layout.dd_spinner_regular, parent, false);
                     final String item = values.get(position);
                     itemView.setText(item);
@@ -70,7 +67,7 @@ public class SelectorModule extends SupportDebugModule {
             holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-                    final String prev = getSettings().getSelectorValue(name);
+                    final String prev = selectorSettings.read(name);
                     final String next = values.get(position);
                     handleSelection(context, name, values, prev, next);
                 }
@@ -96,7 +93,10 @@ public class SelectorModule extends SupportDebugModule {
             showConfirmationDialog(
                     context,
                     message,
-                    () -> getSettings().changeSelector(name, next).subscribe(SelectorModule.this::rebirth),
+                    () -> {
+                        selectorSettings.change(name, next);
+                        rebirth();
+                    },
                     () -> {         //revert settings
                         final int previousPosition = values.indexOf(prev);
                         if (previousPosition >= 0) {
@@ -117,7 +117,7 @@ public class SelectorModule extends SupportDebugModule {
         stringBuilder.append("Selectors = {\n");
         for (final String name : holders.keySet()) {
             stringBuilder.append("  \"").append(name).append("\": ")
-                    .append(getSettings().getSelectorValues(name))
+                    .append(selectorSettings.values(name))
                     .append(",\n");
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
@@ -126,9 +126,9 @@ public class SelectorModule extends SupportDebugModule {
     }
 
     private void refresh() {
-        for (final String name : getSettings().getSelectors()) {
-            final String value = getSettings().getSelectorValue(name);
-            final int position = getSettings().getSelectorValues(name).indexOf(value);
+        for (final String name : selectorSettings.names()) {
+            final String value = selectorSettings.read(name);
+            final int position = selectorSettings.values(name).indexOf(value);
             if (position >= 0) {
                 holders.get(name).spinner.setSelection(position);
             }

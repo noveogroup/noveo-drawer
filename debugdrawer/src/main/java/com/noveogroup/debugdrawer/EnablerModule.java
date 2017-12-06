@@ -1,4 +1,4 @@
-package com.noveogroup.debugdrawer.module;
+package com.noveogroup.debugdrawer;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,27 +9,26 @@ import android.widget.GridLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.noveogroup.debugdrawer.R;
-import com.noveogroup.debugdrawer.api.SupportDebugModule;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class EnablerModule extends SupportDebugModule {
 
-    private final Map<String, EnablerViewHolder> holders = new LinkedHashMap<>();
+    private final Map<String, EnablerViewHolder> holders;
+    private final DrawerEnablerSettings enablerSettings;
 
     @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public EnablerModule() {
         super();
-        final Set<String> inspections = getSettings().getSelectors();
-        if (inspections.isEmpty()) {
+        this.holders = new LinkedHashMap<>();
+        this.enablerSettings = getEnablerSettings();
+
+        if (Utils.isEmpty(enablerSettings.names())) {
             throw new NullPointerException("Enablers not found. " +
                     "Please add any with NoveoDebugDrawer.init(NoveoDebugDrawerConfig.builder().addEnablers())");
         }
 
-        getSettings().applyEnablers();
+        enablerSettings.applyInitial();
     }
 
     @NonNull
@@ -40,17 +39,21 @@ public class EnablerModule extends SupportDebugModule {
         grid.setClickable(false);
         grid.setEnabled(false);
 
-        for (final String name : getSettings().getEnablers()) {
+        for (final String name : enablerSettings.names()) {
             final EnablerViewHolder holder = new EnablerViewHolder((ViewGroup) inflater.inflate(R.layout.dd_item_enabler_include, grid, true));
             holder.nameView.setText(name);
-            holder.switchView.setChecked(getSettings().isEnablerEnabled(name));
-            holder.switchView.setOnCheckedChangeListener((button, enabled) -> {
-                if (getSettings().isEnablerEnabled(name) != enabled) {
+            holder.switchView.setChecked(enablerSettings.read(name));
+            holder.switchView.setOnCheckedChangeListener((it, newValue) -> {
+                final Boolean previousValue = enablerSettings.read(name);
+                if (previousValue != newValue) {
                     showConfirmationDialog(
                             context,
-                            html(context.getString(R.string.dd_alert_restart_enabler_message, enabled ? "enable" : "disable", name)),
-                            () -> getSettings().enableEnabler(name, enabled).subscribe(this::rebirth),
-                            () -> holder.switchView.setChecked(!enabled));
+                            html(context.getString(R.string.dd_alert_restart_enabler_message, newValue ? "enable" : "disable", name)),
+                            () -> {
+                                enablerSettings.change(name, newValue);
+                                rebirth();
+                            },
+                            () -> holder.switchView.setChecked(!newValue));
                 }
             });
             holders.put(name, holder);
@@ -71,7 +74,7 @@ public class EnablerModule extends SupportDebugModule {
         stringBuilder.append("Inspections = {\n");
         for (final String name : holders.keySet()) {
             stringBuilder.append("  \"").append(name).append("\": ")
-                    .append(getSettings().isEnablerEnabled(name) ? "enabled" : "disabled")
+                    .append(enablerSettings.read(name) ? "enabled" : "disabled")
                     .append(",\n");
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
@@ -81,7 +84,7 @@ public class EnablerModule extends SupportDebugModule {
 
     private void refresh() {
         for (final String name : holders.keySet()) {
-            holders.get(name).switchView.setChecked(getSettings().isEnablerEnabled(name));
+            holders.get(name).switchView.setChecked(enablerSettings.read(name));
         }
     }
 

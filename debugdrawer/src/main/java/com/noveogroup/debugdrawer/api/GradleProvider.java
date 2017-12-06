@@ -1,6 +1,6 @@
-package com.noveogroup.debugdrawer.api.provider;
+package com.noveogroup.debugdrawer.api;
 
-import com.noveogroup.debugdrawer.data.model.BuildConfigDto;
+import com.noveogroup.debugdrawer.BuildConfigDto;
 
 /**
  * Created by avaytsekhovskiy on 30/11/2017.

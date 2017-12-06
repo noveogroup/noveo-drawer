@@ -1,12 +1,6 @@
-package com.noveogroup.debugdrawer.api;
+package com.noveogroup.debugdrawer;
 
 import android.content.Context;
-
-import com.noveogroup.debugdrawer.data.model.BuildConfigDto;
-import com.noveogroup.debugdrawer.data.model.Enabler;
-import com.noveogroup.debugdrawer.data.model.SelectorDto;
-import com.noveogroup.debugdrawer.domain.DeveloperSettingsManager;
-import com.noveogroup.debugdrawer.domain.RebirthExecutor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +12,11 @@ import java.util.List;
 public final class NoveoDebugDrawerConfig {
 
     private final RebirthExecutor rebirthExecutor;
-    private final DeveloperSettingsManager settings;
+    private final DrawerSettings settings;
     private final boolean debug;
 
     NoveoDebugDrawerConfig(final RebirthExecutor rebirthExecutor,
-                           final DeveloperSettingsManager settings,
+                           final DrawerSettings settings,
                            final boolean debug) {
         this.rebirthExecutor = rebirthExecutor;
         this.settings = settings;
@@ -37,7 +31,7 @@ public final class NoveoDebugDrawerConfig {
         return rebirthExecutor;
     }
 
-    DeveloperSettingsManager getSettings() {
+    DrawerSettings getSettings() {
         return settings;
     }
 
@@ -49,7 +43,7 @@ public final class NoveoDebugDrawerConfig {
     public static class Builder {
         final Context context;
         final List<Enabler> enablers;
-        final List<SelectorDto> properties;
+        final List<Selector> properties;
         boolean debug;
         BuildConfigDto configHelper;
 
@@ -90,24 +84,24 @@ public final class NoveoDebugDrawerConfig {
             return this;
         }
 
-        public Builder addSelector(final SelectorDto selector) {
+        public Builder addSelector(final Selector selector) {
             this.properties.add(selector);
             return this;
         }
 
-        public Builder addSelectors(final SelectorDto... selectors) {
+        public Builder addSelectors(final Selector... selectors) {
             this.properties.addAll(Arrays.asList(selectors));
             return this;
         }
 
-        public Builder addSelectors(final List<SelectorDto> selectors) {
+        public Builder addSelectors(final List<Selector> selectors) {
             this.properties.addAll(selectors);
             return this;
         }
 
         public NoveoDebugDrawerConfig build() {
             final RebirthExecutor rebirthExecutor = new RebirthExecutor(context);
-            final DeveloperSettingsManager settings = new DeveloperSettingsManager(context, configHelper, properties, enablers);
+            final DrawerSettings settings = new DrawerSettings(context, configHelper, properties, enablers);
             return new NoveoDebugDrawerConfig(rebirthExecutor, settings, debug);
         }
 

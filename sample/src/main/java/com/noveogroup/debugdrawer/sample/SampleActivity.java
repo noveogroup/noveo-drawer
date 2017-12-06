@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.noveogroup.debugdrawer.api.NoveoDebugDrawer;
-import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
+import com.noveogroup.debugdrawer.NoveoDebugDrawer;
+import com.noveogroup.debugdrawer.api.SelectorProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +39,8 @@ public class SampleActivity extends AppCompatActivity {
 
         final SelectorProvider selectorProvider = NoveoDebugDrawer.getSelectorProvider();
         server.setText(
-                "Endpoint: " + selectorProvider.getSelectorValue(DebugDrawerHelper.SELECTOR_ENDPOINT) + "\n" +
-                        "Theme: " + selectorProvider.getSelectorValue(DebugDrawerHelper.SELECTOR_THEME));
+                "Endpoint: " + selectorProvider.read(DebugDrawerHelper.SELECTOR_ENDPOINT) + "\n" +
+                        "Theme: " + selectorProvider.read(DebugDrawerHelper.SELECTOR_THEME));
 
     }
 

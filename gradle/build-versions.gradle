@@ -1,0 +1,15 @@
+def propertiesFile = rootProject.file("gradle.properties")
+def properties = new Properties()
+properties.load(new FileInputStream(propertiesFile))
+
+ext.buildVersions = [
+        code: properties.getProperty("VERSION_CODE") as Integer,
+        name: properties.getProperty("VERSION_NAME"),
+]
+
+ext.sdkVersions = [
+        minSdk    : 15,
+        targetSdk : 26,
+        compileSdk: 26,
+        buildTools: "27.0.1",
+]

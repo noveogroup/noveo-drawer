@@ -5,18 +5,19 @@ import android.app.Application;
 import android.support.annotation.StyleRes;
 
 import com.facebook.stetho.Stetho;
-import com.noveogroup.debugdrawer.api.NoveoDebugDrawer;
-import com.noveogroup.debugdrawer.api.NoveoDebugDrawerConfig;
-import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
-import com.noveogroup.debugdrawer.data.model.Enabler;
-import com.noveogroup.debugdrawer.data.model.SelectorDto;
-import com.noveogroup.debugdrawer.module.EnablerModule;
-import com.noveogroup.debugdrawer.module.GradleModule;
-import com.noveogroup.debugdrawer.module.SelectorModule;
+import com.noveogroup.debugdrawer.Enabler;
+import com.noveogroup.debugdrawer.EnablerModule;
+import com.noveogroup.debugdrawer.GradleModule;
+import com.noveogroup.debugdrawer.NoveoDebugDrawer;
+import com.noveogroup.debugdrawer.NoveoDebugDrawerConfig;
+import com.noveogroup.debugdrawer.Selector;
+import com.noveogroup.debugdrawer.SelectorModule;
+import com.noveogroup.debugdrawer.api.SelectorProvider;
 import com.squareup.leakcanary.LeakCanary;
 
 import io.palaima.debugdrawer.DebugDrawer;
 
+@SuppressWarnings("WeakerAccess")
 public final class DebugDrawerHelper {
 
     public static final String ENABLER_STETHO = "Stetho";
@@ -33,12 +34,12 @@ public final class DebugDrawerHelper {
                 .setBuildConfigClass(BuildConfig.class)
                 .allowDebug()
                 .addSelectors(
-                        new SelectorDto(SELECTOR_ENDPOINT,
+                        new Selector(SELECTOR_ENDPOINT,
                                 "http://staging.noveogroup.com",
                                 "http://production.noveogroup.com",
                                 "http://test.noveogroup.com",
                                 "http://mock.noveogroup.com"),
-                        new SelectorDto(SELECTOR_THEME,
+                        new Selector(SELECTOR_THEME,
                                 Theme.LIGHT.name(),
                                 Theme.DARK.name(),
                                 Theme.CUSTOM.name())
@@ -79,7 +80,7 @@ public final class DebugDrawerHelper {
 
     @StyleRes
     public static int getSelectedTheme() {
-        final String name = getSelector().getSelectorValue(SELECTOR_THEME);
+        final String name = getSelector().read(SELECTOR_THEME);
         return Theme.valueOf(name).themeId;
     }
 

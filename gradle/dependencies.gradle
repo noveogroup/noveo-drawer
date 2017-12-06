@@ -1,10 +1,18 @@
+apply from: "gradle/build-versions.gradle"
+
 ext.versions = [
         /*GRADLE DEPENDENCIES*/
         androidGradlePlugin        : "3.0.1",
         noveoCheckPlugin           : "1.2.4",
+        retrolambdaPlugin          : "3.6.1",
+
+        /* NOVEO */
+        noveoPreferencesVersion    : "0.0.2",
+
 
         /*APPLICATION DEPENDENCIES*/
-        supportLibraryVersion      : "27.0.2",
+        supportLibraryVersion      : "26.1.0",
+        supportAnnotations         : "27.0.0",
         slf4jVersion               : "1.7.25",
         logbackVersion             : "1.1.1-6",
         butterKnifeVersion         : "8.8.1",
@@ -13,7 +21,6 @@ ext.versions = [
         phoenixVersion             : "2.0.0",
         leakCanaryVersion          : "1.5.1",
         debugDrawerVersion         : "0.7.0",
-        noveoPreferencesVersion    : "0.0.1",
         streamSupportVersion       : "1.5.6",
 
         /*TEST DEPENDENCIES*/
@@ -24,6 +31,7 @@ ext.versions = [
 ext.gradlePlugins = [
         android    : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
         noveoCheck : "com.noveogroup.android:check:$versions.noveoCheckPlugin",
+        retrolambda: "me.tatarka:gradle-retrolambda:$versions.retrolambdaPlugin",
 ]
 
 ext.libraries = [
@@ -32,9 +40,9 @@ ext.libraries = [
         mockitoCore              : "org.mockito:mockito-core:$versions.mockitoVersion",
 
         /* Support Libraries */
-        supportLibrary           : "com.android.support:support-v4:$versions.supportLibraryVersion",
-        supportAppCompat         : "com.android.support:appcompat-v7:$versions.supportLibraryVersion",
-        supportAnnotations       : "com.android.support:support-annotations:$versions.supportLibraryVersion",
+        supportLibrary    : "com.android.support:support-v4:$versions.supportLibraryVersion",
+        supportAppCompat  : "com.android.support:appcompat-v7:$versions.supportLibraryVersion",
+        supportAnnotations: "com.android.support:support-annotations:$versions.supportAnnotations",
 
         /* Logger */
         slf4j                    : "org.slf4j:slf4j-api:$versions.slf4jVersion",

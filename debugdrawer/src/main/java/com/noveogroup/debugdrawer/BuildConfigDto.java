@@ -1,4 +1,4 @@
-package com.noveogroup.debugdrawer.data.model;
+package com.noveogroup.debugdrawer;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -9,14 +9,14 @@ import java.util.List;
  */
 
 @SuppressWarnings("WeakerAccess")
-public class BuildConfigDto {
+public final class BuildConfigDto {
 
     private final String buildSource;
     private final String buildDate;
     private final String buildFlavor;
     private final String buildType;
 
-    public BuildConfigDto(final Class buildConfigClass) {
+    BuildConfigDto(final Class buildConfigClass) {
         final List<Field> fields = Arrays.asList(buildConfigClass.getDeclaredFields());
         buildSource = findByName(fields, "BUILD_SOURCE");
         buildDate = findByName(fields, "BUILD_DATE");
@@ -24,7 +24,7 @@ public class BuildConfigDto {
         buildType = findByName(fields, "BUILD_TYPE");
     }
 
-    public BuildConfigDto(final String buildSource, final String buildDate, final String buildFlavor, final String buildType) {
+    BuildConfigDto(final String buildSource, final String buildDate, final String buildFlavor, final String buildType) {
         this.buildSource = buildSource;
         this.buildDate = buildDate;
         this.buildFlavor = buildFlavor;

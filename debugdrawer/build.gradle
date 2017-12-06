@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: "me.tatarka.retrolambda"
 apply plugin: "com.noveogroup.android.check"
-
-apply from: 'config.gradle'
-project.archivesBaseName = ext.artifactId
-description = 'Modules to switch configuration using single apk file'
 
 android {
     compileSdkVersion sdkVersions.compileSdk
@@ -61,17 +58,12 @@ dependencies {
 
     /* Support Libraries */
     implementation libraries.slf4j
-    implementation libraries.rxJava2
-
-    /* Useful libraries */
-    implementation libraries.streamSupport
     implementation libraries.noveoPreferences
     implementation libraries.phoenix
 
-    debugApi libraries.debugDrawer
-    releaseApi libraries.debugDrawerNoOp
-    debugApi libraries.debugDrawerView
-    releaseApi libraries.debugDrawerViewNoOp
+    /* Palamia debug drawer */
+    implementation libraries.debugDrawer
+    implementation libraries.debugDrawerView
 }
 
 check {
@@ -81,5 +73,4 @@ check {
     findbugs { skip true }
 }
 
-apply from: 'androidmaven.gradle'
-apply from: 'bintray.gradle'
+apply from: rootProject.file('gradle/mvn-push.gradle')

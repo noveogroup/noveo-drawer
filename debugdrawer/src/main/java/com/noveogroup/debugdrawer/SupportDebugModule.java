@@ -1,4 +1,4 @@
-package com.noveogroup.debugdrawer.api;
+package com.noveogroup.debugdrawer;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,26 +7,17 @@ import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
 
-import com.noveogroup.debugdrawer.ColorUtils;
-import com.noveogroup.debugdrawer.R;
-import com.noveogroup.debugdrawer.Utils;
-import com.noveogroup.debugdrawer.domain.DeveloperSettingsManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.palaima.debugdrawer.base.DebugModule;
 
 @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
-public abstract class SupportDebugModule implements DebugModule {
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-    protected Logger getLogger() {
-        return logger;
-    }
+abstract class SupportDebugModule implements DebugModule {
+    final Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("deprecation")
-    protected CharSequence html(final String html) {
+    CharSequence html(final String html) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
             return Html.fromHtml(html);
         } else {
@@ -34,7 +25,7 @@ public abstract class SupportDebugModule implements DebugModule {
         }
     }
 
-    protected void showConfirmationDialog(final Context context, final CharSequence message, final Runnable restart, final Runnable revert) {
+    void showConfirmationDialog(final Context context, final CharSequence message, final Runnable restart, final Runnable revert) {
         Utils.log(logger, "confirmation --> ask\n======\n{}\n======\n", message);
         final Drawable icon = ContextCompat.getDrawable(context, android.R.drawable.ic_dialog_alert).mutate();
         ColorUtils.colorize(icon, ColorUtils.getThemeColor(context, R.attr.colorAccent));
@@ -80,7 +71,7 @@ public abstract class SupportDebugModule implements DebugModule {
     @Override
     public void onStart() {
         //do nothing
-        notifyStarted();
+        NoveoDebugDrawer.registerModule(this);
     }
 
     @Override
@@ -89,19 +80,23 @@ public abstract class SupportDebugModule implements DebugModule {
     }
 
     @SuppressWarnings("MethodMayBeStatic")
-    protected DeveloperSettingsManager getSettings() {
+    DrawerSettings getSettings() {
         return NoveoDebugDrawer.config.getSettings();
     }
 
+    DrawerEnablerSettings getEnablerSettings() {
+        return getSettings().getEnablerSettings();
+    }
+
+    DrawerSelectorSettings getSelectorSettings() {
+        return getSettings().getSelectorSettings();
+    }
+
     @SuppressWarnings("MethodMayBeStatic")
-    protected void rebirth() {
+    void rebirth() {
         NoveoDebugDrawer.config.getRebirthExecutor().rebirth();
     }
 
     public abstract String getDebugInfo();
-
-    protected void notifyStarted() {
-        NoveoDebugDrawer.registerModule(this);
-    }
 
 }

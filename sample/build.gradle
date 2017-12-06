@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: "com.noveogroup.android.check"
+apply plugin: "me.tatarka.retrolambda"
+
 apply from: 'drawer.gradle'
 
 android {
@@ -56,16 +57,13 @@ dependencies {
     implementation libraries.butterKnife
     annotationProcessor libraries.butterKnifeCompiler
 
+    implementation libraries.rxJava2
+
     implementation project(':debugdrawer')
+
+    implementation libraries.debugDrawer
     implementation libraries.debugDrawerCommons
     implementation libraries.stetho
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
-}
-
-check {
-    abortOnError true
-    checkstyle { config rootProject.file('analyzers/checkstyle.xml').absolutePath }
-    pmd { config rootProject.file('analyzers/pmd.xml').absolutePath }
-    findbugs { skip true }
 }

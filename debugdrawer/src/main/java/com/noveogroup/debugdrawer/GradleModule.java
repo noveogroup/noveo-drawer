@@ -1,15 +1,10 @@
-package com.noveogroup.debugdrawer.module;
+package com.noveogroup.debugdrawer;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.noveogroup.debugdrawer.R;
-import com.noveogroup.debugdrawer.Utils;
-import com.noveogroup.debugdrawer.api.SupportDebugModule;
-import com.noveogroup.debugdrawer.data.model.BuildConfigDto;
 
 public class GradleModule extends SupportDebugModule {
 

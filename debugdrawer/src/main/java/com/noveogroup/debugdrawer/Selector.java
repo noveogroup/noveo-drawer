@@ -1,26 +1,27 @@
-package com.noveogroup.debugdrawer.data.model;
+package com.noveogroup.debugdrawer;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
-public class SelectorDto {
+public class Selector {
     private static final int HASHCODE_CONSTANT = 31;
 
     private final String name;
-    private final Set<String> value;
+    private final List<String> value;
 
-    public SelectorDto(final String name, final String... values) {
+    public Selector(final String name, final String... values) {
         this.name = name;
-        this.value = new LinkedHashSet<>(Arrays.asList(values));
+        this.value = new ArrayList<>(new LinkedHashSet<>(Arrays.asList(values)));
     }
 
     public String getName() {
         return name;
     }
 
-    public Set<String> getValues() {
+    public List<String> getValues() {
         return value;
     }
 
@@ -34,12 +35,12 @@ public class SelectorDto {
             return false;
         }
 
-        final SelectorDto selectorDto = (SelectorDto) o;
+        final Selector selector = (Selector) o;
 
-        if (name != null ? !name.equals(selectorDto.name) : selectorDto.name != null) {
+        if (name != null ? !name.equals(selector.name) : selector.name != null) {
             return false;
         }
-        return value != null ? value.equals(selectorDto.value) : selectorDto.value == null;
+        return value != null ? value.equals(selector.value) : selector.value == null;
     }
 
     @Override

@@ -7,19 +7,20 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.util.TypedValue;
 
-public final class ColorUtils {
+final class ColorUtils {
 
     private ColorUtils() {
+        //empty utility constructor
     }
 
-    public static void colorize(final Drawable drawable, @ColorInt final int color) {
+    static void colorize(final Drawable drawable, @ColorInt final int color) {
         if (drawable != null) {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
     }
 
     @ColorInt
-    public static int getThemeColor(final Context context, @AttrRes final int attribute) {
+    static int getThemeColor(final Context context, @AttrRes final int attribute) {
         final TypedValue color = new TypedValue();
         context.getTheme().resolveAttribute(attribute, color, true);
         return color.data;

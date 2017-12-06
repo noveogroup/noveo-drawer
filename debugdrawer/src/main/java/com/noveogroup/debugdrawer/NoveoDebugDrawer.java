@@ -1,11 +1,10 @@
-package com.noveogroup.debugdrawer.api;
+package com.noveogroup.debugdrawer;
 
 import android.content.Context;
 
-import com.noveogroup.debugdrawer.Utils;
-import com.noveogroup.debugdrawer.api.provider.EnablerProvider;
-import com.noveogroup.debugdrawer.api.provider.GradleProvider;
-import com.noveogroup.debugdrawer.api.provider.SelectorProvider;
+import com.noveogroup.debugdrawer.api.EnablerProvider;
+import com.noveogroup.debugdrawer.api.GradleProvider;
+import com.noveogroup.debugdrawer.api.SelectorProvider;
 import com.noveogroup.preferences.NoveoPreferences;
 
 import java.util.Set;
@@ -40,11 +39,11 @@ public final class NoveoDebugDrawer {
     }
 
     public static EnablerProvider getInspectionProvider() {
-        return config.getSettings();
+        return config.getSettings().getEnablerSettings();
     }
 
     public static SelectorProvider getSelectorProvider() {
-        return config.getSettings();
+        return config.getSettings().getSelectorSettings();
     }
 
     static void registerModule(final SupportDebugModule debugModule) {
