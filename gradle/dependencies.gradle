@@ -11,7 +11,7 @@ ext.versions = [
 
 
         /*APPLICATION DEPENDENCIES*/
-        supportLibraryVersion      : "26.1.0",
+        supportLibraryVersion      : "27.0.2",
         supportAnnotations         : "27.0.0",
         slf4jVersion               : "1.7.25",
         logbackVersion             : "1.1.1-6",
@@ -41,6 +41,10 @@ ext.libraries = [
 
         /* Support Libraries */
         supportLibrary    : "com.android.support:support-v4:$versions.supportLibraryVersion",
+
+        supportCompat    : "com.android.support:support-compat:$versions.supportLibraryVersion",
+        supportCoreUtils    : "com.android.support:support-core-utils:$versions.supportLibraryVersion",
+        supportCoreUi    : "com.android.support:support-core-ui:$versions.supportLibraryVersion",
         supportAppCompat  : "com.android.support:appcompat-v7:$versions.supportLibraryVersion",
         supportAnnotations: "com.android.support:support-annotations:$versions.supportAnnotations",
 
@@ -68,6 +72,7 @@ ext.libraries = [
         phoenix                  : "com.jakewharton:process-phoenix:$versions.phoenixVersion",
 
         /* DebugDrawer */
+        debugDrawerBase          : "io.palaima.debugdrawer:debugdrawer-base:$versions.debugDrawerVersion",
         debugDrawer              : "io.palaima.debugdrawer:debugdrawer:$versions.debugDrawerVersion",
         debugDrawerNoOp          : "io.palaima.debugdrawer:debugdrawer-no-op:$versions.debugDrawerVersion",
         debugDrawerView          : "io.palaima.debugdrawer:debugdrawer-view:$versions.debugDrawerVersion",

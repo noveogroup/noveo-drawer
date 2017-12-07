@@ -5,11 +5,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by avaytsekhovskiy on 06/12/2017.
  */
-final class SingleInitializer {
+final class OneTimeInitializer {
     private final AtomicBoolean isInitialized;
     private final Runnable action;
 
-    SingleInitializer(final Runnable action) {
+    OneTimeInitializer(final Runnable action) {
         this.isInitialized = new AtomicBoolean();
         this.action = action;
     }

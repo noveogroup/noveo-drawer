@@ -5,23 +5,21 @@ package com.noveogroup.debugdrawer;
  */
 public abstract class Enabler {
 
-    private final String name;
-
     Enabler(final String name) {
-        this.name = name;
+        //do nothing
     }
 
     public static Enabler create(final String name, final Enabler.EnablerAction action) {
         return new Enabler(name) {
             @Override
             public void initialize(final boolean enabled) {
-                action.init(enabled);
+                //do nothing
             }
         };
     }
 
     public String getName() {
-        return name;
+        return "";
     }
 
     public abstract void initialize(boolean enabled);

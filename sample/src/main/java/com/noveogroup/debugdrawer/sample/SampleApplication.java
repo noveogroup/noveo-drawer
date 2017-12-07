@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.noveogroup.debugdrawer.NoveoDebugDrawer;
 
+import static com.noveogroup.debugdrawer.sample.DebugDrawerHelper.Theme;
+
 public class SampleApplication extends Application {
 
     public static int themeId;
@@ -11,7 +13,8 @@ public class SampleApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        NoveoDebugDrawer.init(DebugDrawerHelper.createConfig(this));
-        themeId = DebugDrawerHelper.getSelectedTheme();
+        DebugDrawerHelper.initDebugDrawer(this);
+
+        themeId = Theme.getSelectedTheme(NoveoDebugDrawer.getSelectorProvider());
     }
 }

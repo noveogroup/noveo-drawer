@@ -9,26 +9,30 @@ import android.widget.GridLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.noveogroup.debugdrawer.NoveoDebugDrawer.enablers;
 
 public class EnablerModule extends SupportDebugModule {
 
     private final Map<String, EnablerViewHolder> holders;
-    private final DrawerEnablerSettings enablerSettings;
 
     @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public EnablerModule() {
         super();
         this.holders = new LinkedHashMap<>();
-        this.enablerSettings = getEnablerSettings();
 
-        if (Utils.isEmpty(enablerSettings.names())) {
-            throw new NullPointerException("Enablers not found. " +
-                    "Please add any with NoveoDebugDrawer.init(NoveoDebugDrawerConfig.builder().addEnablers())");
+        if (Utils.isEmpty(enablers.names())) {
+            throw new NullPointerException("Enablers not found");
         }
 
-        enablerSettings.applyInitial();
+        enablers.applyInitial();
+    }
+
+    public static void init(final Enabler... enablers) {
+        NoveoDebugDrawer.initEnablers(Arrays.asList(enablers));
     }
 
     @NonNull
@@ -39,18 +43,18 @@ public class EnablerModule extends SupportDebugModule {
         grid.setClickable(false);
         grid.setEnabled(false);
 
-        for (final String name : enablerSettings.names()) {
+        for (final String name : enablers.names()) {
             final EnablerViewHolder holder = new EnablerViewHolder((ViewGroup) inflater.inflate(R.layout.dd_item_enabler_include, grid, true));
             holder.nameView.setText(name);
-            holder.switchView.setChecked(enablerSettings.read(name));
+            holder.switchView.setChecked(enablers.read(name));
             holder.switchView.setOnCheckedChangeListener((it, newValue) -> {
-                final Boolean previousValue = enablerSettings.read(name);
+                final Boolean previousValue = enablers.read(name);
                 if (previousValue != newValue) {
                     showConfirmationDialog(
                             context,
                             html(context.getString(R.string.dd_alert_restart_enabler_message, newValue ? "enable" : "disable", name)),
                             () -> {
-                                enablerSettings.change(name, newValue);
+                                enablers.change(name, newValue);
                                 rebirth();
                             },
                             () -> holder.switchView.setChecked(!newValue));
@@ -74,17 +78,16 @@ public class EnablerModule extends SupportDebugModule {
         stringBuilder.append("Inspections = {\n");
         for (final String name : holders.keySet()) {
             stringBuilder.append("  \"").append(name).append("\": ")
-                    .append(enablerSettings.read(name) ? "enabled" : "disabled")
+                    .append(enablers.read(name) ? "[+]" : "[-]")
                     .append(",\n");
         }
-        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
-        stringBuilder.append("\n}");
+        stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "\n}");
         return stringBuilder.toString();
     }
 
     private void refresh() {
         for (final String name : holders.keySet()) {
-            holders.get(name).switchView.setChecked(enablerSettings.read(name));
+            holders.get(name).switchView.setChecked(enablers.read(name));
         }
     }
 

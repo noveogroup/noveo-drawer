@@ -6,25 +6,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 public class GradleModule extends SupportDebugModule {
 
     private final BuildConfigDto helper;
+
     private TextView gitLabel;
     private TextView dateLabel;
     private TextView flavorLabel;
     private TextView typeLabel;
+
     private String undefined;
 
+    public GradleModule(final Class buildConfigClass) {
+        this(new BuildConfigDto(buildConfigClass));
+    }
+
+    public GradleModule(final String buildSource, final String buildDate, final String buildFlavor, final String buildType) {
+        this(new BuildConfigDto(buildSource, buildDate, buildFlavor, buildType));
+    }
+
     @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
-    public GradleModule() {
+    private GradleModule(final BuildConfigDto buildConfigDto) {
         super();
-        helper = getSettings().getBuildConfig();
+        NoveoDebugDrawer.initGradle(buildConfigDto);
+        helper = buildConfigDto;
         if (helper == null) {
-            throw new NullPointerException("BuildConfigDto not found. " +
-                    "Please add any with\n" +
-                    "NoveoDebugDrawer.init(NoveoDebugDrawerConfig.builder().setBuildConfigClass())\n" +
-                    "or\n" +
-                    "NoveoDebugDrawer.init(NoveoDebugDrawerConfig.builder().setBuildConfigParams())");
+            throw new NullPointerException("buildConfig info not found");
         }
     }
 
@@ -66,6 +76,19 @@ public class GradleModule extends SupportDebugModule {
         dateLabel.setText(Utils.firstNonNull(helper.getBuildDate(), undefined));
         flavorLabel.setText(Utils.firstNonNull(helper.getBuildFlavor(), undefined));
         typeLabel.setText(Utils.firstNonNull(helper.getBuildType(), undefined));
+    }
+
+    private String findByName(final List<Field> fields, final String name) {
+        try {
+            for (final Field field : fields) {
+                if (field.getName().equals(name)) {
+                    return (String) field.get(null);
+                }
+            }
+        } catch (final IllegalAccessException error) {
+            throw new IllegalArgumentException("Can't get field " + name, error);
+        }
+        throw new IllegalArgumentException("Can't find field " + name);
     }
 }
 

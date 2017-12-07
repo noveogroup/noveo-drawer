@@ -55,18 +55,6 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.mockitoCore
 
-    /* Support Libraries */
-    implementation libraries.supportAppCompat
-
-    /* Logging */
-    implementation libraries.slf4j
-
-    /* SharedPreferences */
-    implementation libraries.noveoPreferences
-
-    /* Process Rebirth */
-    implementation libraries.phoenix
-
     /* Palamia DebugDrawer extension for*/
     implementation libraries.debugDrawerBase
 }

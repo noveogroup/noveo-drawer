@@ -7,18 +7,14 @@ import java.util.Collection;
 @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
 final class Utils {
 
-    private static boolean debug;
+    static boolean debug;
 
     private Utils() {
         //empty utility constructor
     }
 
-    public static boolean isDebug() {
-        return debug;
-    }
-
-    public static void setDebug(final boolean debug) {
-        Utils.debug = debug;
+    static void enableDebug() {
+        Utils.debug = true;
     }
 
     @SafeVarargs

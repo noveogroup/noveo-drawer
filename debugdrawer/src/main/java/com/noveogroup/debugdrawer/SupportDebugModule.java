@@ -80,21 +80,8 @@ abstract class SupportDebugModule implements DebugModule {
     }
 
     @SuppressWarnings("MethodMayBeStatic")
-    DrawerSettings getSettings() {
-        return NoveoDebugDrawer.config.getSettings();
-    }
-
-    DrawerEnablerSettings getEnablerSettings() {
-        return getSettings().getEnablerSettings();
-    }
-
-    DrawerSelectorSettings getSelectorSettings() {
-        return getSettings().getSelectorSettings();
-    }
-
-    @SuppressWarnings("MethodMayBeStatic")
     void rebirth() {
-        NoveoDebugDrawer.config.getRebirthExecutor().rebirth();
+        NoveoDebugDrawer.rebirthExecutor.rebirth();
     }
 
     public abstract String getDebugInfo();

@@ -6,6 +6,7 @@ import com.noveogroup.debugdrawer.api.EnablerProvider;
 import com.noveogroup.debugdrawer.api.GradleProvider;
 import com.noveogroup.debugdrawer.api.SelectorProvider;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,9 +17,6 @@ public final class NoveoDebugDrawer {
     static final Set<String> MODULES = new TreeSet<>();
     @SuppressWarnings("StaticFieldLeak")
 
-    static PreferencesApi preferences;
-    static RebirthExecutor rebirthExecutor;
-
     static BuildConfigDto buildConfig;
     static DrawerSelectorSettings selectors;
     static DrawerEnablerSettings enablers;
@@ -27,29 +25,21 @@ public final class NoveoDebugDrawer {
     }
 
     public static void init(final Context context) {
-        if (preferences != null) {
-            Utils.sneakyThrow(new RuntimeException("NoveoDebugDrawer can't be initialized twice"));
-        }
-
-        final Context applicationContext = context.getApplicationContext();
-        preferences = new PreferencesApi(applicationContext);
-        rebirthExecutor = new RebirthExecutor(applicationContext);
     }
 
     public static void enableLogging() {
-        Utils.enableDebug();
     }
 
     public static GradleProvider getApplicationProvider() {
-        return () -> Utils.firstNonNull(buildConfig, new BuildConfigDto("", "", "", ""));
+        return () -> new BuildConfigDto("", "", "", "");
     }
 
     public static EnablerProvider getInspectionProvider() {
-        return Utils.firstNonNull(enablers, DrawerEnablerSettings.STUB);
+        return firstNonNull(enablers, DrawerEnablerSettings.STUB);
     }
 
     public static SelectorProvider getSelectorProvider() {
-        return Utils.firstNonNull(selectors, DrawerSelectorSettings.STUB);
+        return firstNonNull(selectors, DrawerSelectorSettings.STUB);
     }
 
     static void initGradle(final BuildConfigDto dto) {
@@ -57,19 +47,22 @@ public final class NoveoDebugDrawer {
     }
 
     static void initSelectors(final List<Selector> selectorList) {
-        selectors = new DrawerSelectorSettings(preferences, selectorList);
+        final HashMap<String, String> map = new HashMap<>();
+        for (final Selector selector : selectorList) {
+            map.put(selector.getName(), selector.getValues().get(0));
+        }
+        selectors = new DrawerSelectorSettings(map);
     }
 
     static void initEnablers(final List<Enabler> enablerList) {
-        enablers = new DrawerEnablerSettings(preferences, enablerList);
+        enablers = new DrawerEnablerSettings();
     }
 
-    static void registerModule(final SupportDebugModule debugModule) {
-        final String name = debugModule.getClass().getName();
-        if (Utils.debug && !MODULES.contains(name)) {
-            MODULES.add(name);
-            Utils.log(debugModule.logger, debugModule.getDebugInfo());
+    private static <T> T firstNonNull(T... objects) {
+        for (final T object : objects) {
+            return object;
         }
+        return null;
     }
 
 }

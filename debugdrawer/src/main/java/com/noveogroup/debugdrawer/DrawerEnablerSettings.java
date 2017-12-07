@@ -13,7 +13,7 @@ import java.util.Set;
 final class DrawerEnablerSettings implements EnablerProvider, SettingsWriter<Boolean> {
 
     private final PreferencesApi preferences;
-    private final Map<String, SingleInitializer> enablerMap;
+    private final Map<String, OneTimeInitializer> enablerMap;
 
     DrawerEnablerSettings(final PreferencesApi preferences,
                           final List<Enabler> enablers) {
@@ -22,7 +22,7 @@ final class DrawerEnablerSettings implements EnablerProvider, SettingsWriter<Boo
 
 
         for (final Enabler enabler : enablers) {
-            enablerMap.put(enabler.getName(), new SingleInitializer(
+            enablerMap.put(enabler.getName(), new OneTimeInitializer(
                     () -> enabler.initialize(read(enabler.getName()))));
         }
 

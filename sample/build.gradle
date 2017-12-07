@@ -59,10 +59,16 @@ dependencies {
 
     implementation libraries.rxJava2
 
-    implementation project(':debugdrawer')
+    debugImplementation project(':debugdrawer')
+    releaseImplementation project(':debugdrawer-no-op')
 
-    implementation libraries.debugDrawer
     implementation libraries.debugDrawerCommons
+    debugImplementation libraries.debugDrawer
+    debugImplementation libraries.debugDrawerView
+    releaseImplementation libraries.debugDrawerNoOp
+    releaseImplementation libraries.debugDrawerViewNoOp
+
+    /* Palamia debug drawer */
     implementation libraries.stetho
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
