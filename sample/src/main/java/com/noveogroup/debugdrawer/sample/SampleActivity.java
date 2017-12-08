@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.noveogroup.debugdrawer.NoveoDebugDrawer;
-import com.noveogroup.debugdrawer.api.SelectorProvider;
+import com.noveogroup.debugdrawer.SelectorProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,17 +16,30 @@ public class SampleActivity extends AppCompatActivity {
 
     @BindView(R.id.server)
     TextView server;
+
     private DebugDrawer drawer;
+
+    private DebugDrawerHelper drawerHelper;
+    private SelectorProvider selectorProvider;
+    private int themeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(SampleApplication.themeId);
+
+        //DI Injection
+        this.selectorProvider = SampleApplication.injector.configuration.getSelectorProvider();
+        this.drawerHelper = SampleApplication.injector.drawerHelper;
+        this.themeId = drawerHelper.getTheme();
+
+        //Create View
+        setTheme(themeId);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //Create Drawer
         if (savedInstanceState == null) {
-            drawer = DebugDrawerHelper.makeDrawer(this);
+            drawer = drawerHelper.makeDrawer(this);
         }
     }
 
@@ -36,8 +48,6 @@ public class SampleActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         drawer.onStart();
-
-        final SelectorProvider selectorProvider = NoveoDebugDrawer.getSelectorProvider();
         server.setText(
                 "Endpoint: " + selectorProvider.read(DebugDrawerHelper.SELECTOR_ENDPOINT) + "\n" +
                         "Theme: " + selectorProvider.read(DebugDrawerHelper.SELECTOR_THEME));

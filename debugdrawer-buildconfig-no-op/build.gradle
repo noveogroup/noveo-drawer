@@ -1,19 +1,16 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: "me.tatarka.retrolambda"
-
-apply from: 'drawer.gradle'
+apply plugin: "com.noveogroup.android.check"
 
 android {
     compileSdkVersion sdkVersions.compileSdk
+    buildToolsVersion sdkVersions.buildTools
 
     defaultConfig {
-        applicationId "com.noveogroup.debugdrawer.sample"
         minSdkVersion sdkVersions.minSdk
         targetSdkVersion sdkVersions.targetSdk
         versionCode buildVersions.code
         versionName buildVersions.name
-        buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
-        buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
     }
 
     buildTypes {
@@ -21,7 +18,6 @@ android {
             debuggable true
         }
         release {
-            signingConfig debug.signingConfig
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -33,6 +29,7 @@ android {
         disable "AllowBackup"
         disable "ContentDescription"
         disable "InvalidPackage"
+        disable "RequiredSize"
         disable "SpUsage"
         disable "IconMissingDensityFolder"
         disable "SelectableText"
@@ -40,30 +37,40 @@ android {
         disable "MissingPrefix"
     }
 
+    sourceSets {
+        main.res.srcDirs = [
+                'src/main/res',
+                'src/main/res-public'
+        ]
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
 }
 
 dependencies {
-    /* Support */
-    implementation libraries.supportLibrary
+    /* test dependencies */
+    testImplementation libraries.junit
+    testImplementation libraries.mockitoCore
+
+    /* Support Libraries */
     implementation libraries.supportAppCompat
 
     /* Logging */
     implementation libraries.slf4j
-    implementation libraries.logbackCore
-    implementation(libraries.logbackClassic) {
-        exclude group: "com.google.android", module: "android"
-    }
 
-    /* UI */
-    implementation libraries.butterKnife
-    annotationProcessor libraries.butterKnifeCompiler
-
-    /* Library */
-    debugImplementation project(':sample-drawer')
-    releaseImplementation project(':sample-drawer')
+    /* Palamia DebugDrawer extension for*/
+    implementation libraries.debugDrawerBase
+    implementation project(":debugdrawer-base")
 }
+
+check {
+    abortOnError true
+    checkstyle { config rootProject.file('analyzers/checkstyle.xml').absolutePath }
+    pmd { config rootProject.file('analyzers/pmd.xml').absolutePath }
+    findbugs { skip true }
+}
+
+apply from: rootProject.file('gradle/mvn-push.gradle')

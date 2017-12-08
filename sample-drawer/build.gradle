@@ -1,19 +1,13 @@
-apply plugin: 'com.android.application'
-apply plugin: "me.tatarka.retrolambda"
-
-apply from: 'drawer.gradle'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion sdkVersions.compileSdk
 
     defaultConfig {
-        applicationId "com.noveogroup.debugdrawer.sample"
         minSdkVersion sdkVersions.minSdk
         targetSdkVersion sdkVersions.targetSdk
         versionCode buildVersions.code
         versionName buildVersions.name
-        buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
-        buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
     }
 
     buildTypes {
@@ -21,7 +15,6 @@ android {
             debuggable true
         }
         release {
-            signingConfig debug.signingConfig
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -48,22 +41,21 @@ android {
 }
 
 dependencies {
-    /* Support */
-    implementation libraries.supportLibrary
-    implementation libraries.supportAppCompat
-
-    /* Logging */
-    implementation libraries.slf4j
-    implementation libraries.logbackCore
-    implementation(libraries.logbackClassic) {
-        exclude group: "com.google.android", module: "android"
-    }
-
-    /* UI */
-    implementation libraries.butterKnife
-    annotationProcessor libraries.butterKnifeCompiler
-
     /* Library */
-    debugImplementation project(':sample-drawer')
-    releaseImplementation project(':sample-drawer')
+    api project(':debugdrawer-base')
+    api project(':debugdrawer-buildinfo')
+    debugApi project(':debugdrawer-buildconfig')
+    releaseApi project(':debugdrawer-buildconfig-no-op')
+
+    /* Palamia debug drawer */
+    api libraries.debugDrawerCommons
+    debugApi libraries.debugDrawer
+    releaseApi libraries.debugDrawerNoOp
+    debugApi libraries.debugDrawerView
+    releaseApi libraries.debugDrawerViewNoOp
+
+    /* Inspection Tools */
+    api libraries.stetho
+    debugApi libraries.leakCanary
+    releaseApi libraries.leakCanaryNoOp
 }

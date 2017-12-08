@@ -1,1 +1,6 @@
-include ':debugdrawer', ':debugdrawer-no-op', ':sample'
+include ':debugdrawer-base'
+include ':debugdrawer-buildconfig'
+include ':debugdrawer-buildconfig-no-op'
+include ':debugdrawer-buildinfo'
+include ':sample'
+include ':sample-drawer'
