@@ -69,7 +69,7 @@ dependencies {
 
     /* Palamia DebugDrawer extension for*/
     implementation libraries.debugDrawerBase
-    implementation project(":debugdrawer-base")
+    api project(":debugdrawer-base")
 }
 
 check {

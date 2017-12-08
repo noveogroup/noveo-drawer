@@ -27,6 +27,13 @@ android {
         }
     }
 
+    flavorDimensions "example"
+    productFlavors {
+        example001 {
+            dimension "example"
+        }
+    }
+
     lintOptions {
         abortOnError true
         checkAllWarnings true

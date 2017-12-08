@@ -42,10 +42,13 @@ android {
 
 dependencies {
     /* Library */
-    api project(':debugdrawer-base')
     api project(':debugdrawer-buildinfo')
     debugApi project(':debugdrawer-buildconfig')
     releaseApi project(':debugdrawer-buildconfig-no-op')
+
+//    api "com.noveogroup:debugdrawer-buildinfo:0.0.1"
+//    debugApi "com.noveogroup:debugdrawer-buildconfig:0.0.1"
+//    releaseApi "com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1"
 
     /* Palamia debug drawer */
     api libraries.debugDrawerCommons

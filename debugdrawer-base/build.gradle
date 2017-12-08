@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: "me.tatarka.retrolambda"
 apply plugin: "com.noveogroup.android.check"
 
 android {
@@ -69,7 +68,7 @@ dependencies {
     implementation libraries.slf4j
 
     /* Palamia DebugDrawer extension for*/
-    implementation libraries.debugDrawerBase
+    api libraries.debugDrawerBase
 }
 
 check {
