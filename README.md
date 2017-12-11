@@ -1,6 +1,6 @@
 # Noveo Debug Drawer
 
-based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ideas from [Jake Wharton's u2020](https://github.com/JakeWharton/u2020).
+Based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ideas from [Jake Wharton's u2020](https://github.com/JakeWharton/u2020).
 
 ## What's new
 
@@ -11,17 +11,17 @@ based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ide
 
 ```groovy
 //Extension: Build Info Module
-api 'com.noveogroup:debugdrawer-buildinfo:0.0.1'
+implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.1'
 
 //Extension: Build Config Module
-debugApi 'com.noveogroup:debugdrawer-buildconfig:0.0.1'
-releaseApi 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1'
+debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.1'
+releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1'
 
 //Debug Drawer https://github.com/palaima/DebugDrawer
-debugApi   'io.palaima.debugdrawer:debugdrawer:0.7.0'
-releaseApi 'io.palaima.debugdrawer:debugdrawer-no-op:0.7.0'
-debugApi   'io.palaima.debugdrawer:debugdrawer-view:0.7.0'
-releaseApi 'io.palaima.debugdrawer:debugdrawer-view-no-op:0.7.0'
+debugImplementation   'io.palaima.debugdrawer:debugdrawer:0.7.0'
+releaseImplementation 'io.palaima.debugdrawer:debugdrawer-no-op:0.7.0'
+debugImplementation   'io.palaima.debugdrawer:debugdrawer-view:0.7.0'
+releaseImplementation 'io.palaima.debugdrawer:debugdrawer-view-no-op:0.7.0'
 ```
 
 ## Build Info Module
@@ -71,10 +71,10 @@ configuration.enableDebug(); //to enable Slf4j logging
 ### EnablerModule
 
 ```java
-final Enabler stetho = Enabler.create(ENABLER_STETHO, enabled -> {
+Enabler stetho = Enabler.create(ENABLER_STETHO, enabled -> {
     if (enabled) Stetho.initializeWithDefaults(application);
 });
-final Enabler leak = Enabler.create(ENABLER_LEAK, enabled -> {
+Enabler leak = Enabler.create(ENABLER_LEAK, enabled -> {
     if (enabled) LeakCanary.install(application);
 });
 
@@ -107,6 +107,59 @@ Boolean enabled = configuration.getEnablerProvider().read(ENABLER_STETHO);
 ```
 
 Check more examples at [sample](sample)
+
+### Debug & Release builds
+
+Use `buildconfig-no-op` version for your release builds. 
+
+1. Enabler will use only releaseValue (`false` by default)
+2. Selector will use only releaseValue (first from array by default)
+3. No extra dependencies / methods that explodes your apk release variant
+
+## Add as separate module
+
+Create separate `debugdrawer` module to keep your debug dependencies separate & clean. 
+
+```groovy
+//app/build.gradle
+
+dependencies {
+    ...
+    debugImplementation   project(':debugdrawer')
+    releaseImplementation project(':debugdrawer')
+}
+```
+
+And configure your debug dependencies in that module.
+
+```groovy
+//debugdrawer/build.gradle
+
+dependencies {
+    // Noveo Drawer Modules
+    api        "com.noveogroup:debugdrawer-buildinfo:0.0.1"
+    debugApi   "com.noveogroup:debugdrawer-buildconfig:0.0.1"
+    releaseApi "com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1"
+
+    /* Palamia Debug Drawer */
+    debugApi   "io.palaima.debugdrawer:debugdrawer:0.7.0"
+    releaseApi "io.palaima.debugdrawer:debugdrawer-no-op:0.7.0"
+    debugApi   "io.palaima.debugdrawer:debugdrawer-view:0.7.0"
+    releaseApi "io.palaima.debugdrawer:debugdrawer-view-no-op:0.7.0"
+    
+    /* Other Modules */
+    api        "io.palaima.debugdrawer:debugdrawer-commons:0.7.0"
+
+    /* Inspection Tools */
+    api        "com.facebook.stetho:stetho:1.5.0"
+    debugApi   "com.squareup.leakcanary:leakcanary-android:1.5.1"
+    releaseApi "com.squareup.leakcanary:leakcanary-android-no-op:1.5.1"
+}
+```
+
+Please, check the example in [sample](sample) and [sample-drawer](sample-drawer) modules.
+
+Use `api` instead of `implementation` to provide dependencies to your app module without duplication.
 
 ## License
 
