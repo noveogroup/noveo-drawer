@@ -120,9 +120,8 @@ public final class DebugDrawerHelper {
 
         @StyleRes
         public static int getSelectedTheme(final SelectorProvider provider) {
-            return Theme.valueOf(provider
-                    .read(SELECTOR_THEME))
-                    .themeId;
+            final String themeName = provider.read(SELECTOR_THEME);
+            return Theme.valueOf(themeName).themeId;
         }
     }
 

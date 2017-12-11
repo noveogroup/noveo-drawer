@@ -80,7 +80,7 @@ public class EnablerModule extends ConfigDebugModule {
     @Override
     public String getDebugInfo() {
         final StringBuilder stringBuilder = new StringBuilder(32);
-        stringBuilder.append("Inspections = {\n");
+        stringBuilder.append("Enablers = {\n");
         for (final String name : holders.keySet()) {
             stringBuilder.append("  \"").append(name).append("\": ")
                     .append(provider.read(name) ? "[+]" : "[-]")

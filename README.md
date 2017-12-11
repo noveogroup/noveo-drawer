@@ -9,33 +9,36 @@ based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ide
 
 ## How to add
 
-Firstly you need to add [Palamia Debug Drawer](https://github.com/palaima/DebugDrawer)
-
 ```groovy
-    debugApi   "io.palaima.debugdrawer:debugdrawer:0.7.0"
-    releaseApi "io.palaima.debugdrawer:debugdrawer-no-op:0.7.0"
-    debugApi   "io.palaima.debugdrawer:debugdrawer-view:0.7.0"
-    releaseApi "io.palaima.debugdrawer:debugdrawer-view-no-op:0.7.0"
+//Extension: Build Info Module
+api 'com.noveogroup:debugdrawer-buildinfo:0.0.1'
+
+//Extension: Build Config Module
+debugApi 'com.noveogroup:debugdrawer-buildconfig:0.0.1'
+releaseApi 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1'
+
+//Debug Drawer https://github.com/palaima/DebugDrawer
+debugApi   'io.palaima.debugdrawer:debugdrawer:0.7.0'
+releaseApi 'io.palaima.debugdrawer:debugdrawer-no-op:0.7.0'
+debugApi   'io.palaima.debugdrawer:debugdrawer-view:0.7.0'
+releaseApi 'io.palaima.debugdrawer:debugdrawer-view-no-op:0.7.0'
 ```
 
 ## Build Info Module
 
-```groovy
-api "com.noveogroup:debugdrawer-buildinfo:0.0.1"
-```
-
-![Gradle Module Screenshot](images/gradle-module.png)
-
-Extracts build source information. Great for CI Integration. 
+| `BuildInfoModule` |  
+| :---: | 
+| ![Gradle Module Screenshot](images/gradle-module.png) | 
+| Extracts build source information. Great for CI Integration | 
 
 1. copy [drawer.gradle](/sample/drawer.gradle) to your app module
 2. add these lines to your _app/build.gradle_:
 ```groovy
-    defaultConfig {
-        ...
-        buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
-        buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
-    }
+defaultConfig {
+    ...
+    buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
+    buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
+}
 ```
 3. add `new GradleModule(BuildConfig.class)` to your DebugDrawer 
 
@@ -58,40 +61,40 @@ The main feature of these modules is that selected properties will be loaded dur
 
 ### How to add
 
-Create `DebugBuildConfiguration` and keep Application-wide reference on it.
+Create `DebugBuildConfiguration` and keep Application scoped reference on it.
 
 ```java
-    DebugBuildConfiguration configuration = DebugBuildConfiguration.init(application);
-    configuration.enableDebug(); //to enable Slf4j logging
+DebugBuildConfiguration configuration = DebugBuildConfiguration.init(application);
+configuration.enableDebug(); //to enable Slf4j logging
 ```
 
 ### EnablerModule
 
 ```java
-    final Enabler stetho = Enabler.create(ENABLER_STETHO, enabled -> {
-        if (enabled) Stetho.initializeWithDefaults(application);
-    });
-    final Enabler leak = Enabler.create(ENABLER_LEAK, enabled -> {
-        if (enabled) LeakCanary.install(application);
-    });
+final Enabler stetho = Enabler.create(ENABLER_STETHO, enabled -> {
+    if (enabled) Stetho.initializeWithDefaults(application);
+});
+final Enabler leak = Enabler.create(ENABLER_LEAK, enabled -> {
+    if (enabled) LeakCanary.install(application);
+});
 
-    stetho.setReleaseValue(true);
+stetho.setReleaseValue(true);
 
-    EnablerModule.init(configuration, stetho, leak, ...);
+EnablerModule.init(configuration, stetho, leak, ...);
 ```
 
 ### SelectorModule
 
 ```java
-    Selector endpoint = new Selector(SELECTOR_ENDPOINT,
-                "http://staging.noveogroup.com",
-                "http://production.noveogroup.com",
-                "http://mock.noveogroup.com");
+Selector endpoint = new Selector(SELECTOR_ENDPOINT,
+            "http://staging.noveogroup.com",
+            "http://production.noveogroup.com",
+            "http://mock.noveogroup.com");
 
-    //Use this value for release build always.
-    endpoint.setReleaseValue("http://production.noveogroup.com");
+//Use this value for release build always.
+endpoint.setReleaseValue("http://production.noveogroup.com");
 
-    SelectorModule.init(configuration, endpoint, ...);
+SelectorModule.init(configuration, endpoint, ...);
 ```
 
 ### Read Values in runtime

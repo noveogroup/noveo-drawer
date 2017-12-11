@@ -1,6 +1,7 @@
 package com.noveogroup.debugdrawer.sample;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import com.noveogroup.debugdrawer.SelectorProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.palaima.debugdrawer.DebugDrawer;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -28,8 +30,8 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //DI Injection
-        this.selectorProvider = SampleApplication.injector.configuration.getSelectorProvider();
-        this.drawerHelper = SampleApplication.injector.drawerHelper;
+        this.selectorProvider = SampleApplication.appScope.configuration.getSelectorProvider();
+        this.drawerHelper = SampleApplication.appScope.drawerHelper;
         this.themeId = drawerHelper.getTheme();
 
         //Create View
@@ -70,6 +72,11 @@ public class SampleActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         drawer.onStop();
+    }
+
+    @OnClick(R.id.button)
+    void onClick() {
+        startActivity(new Intent(this, SampleActivity.class));
     }
 
 }

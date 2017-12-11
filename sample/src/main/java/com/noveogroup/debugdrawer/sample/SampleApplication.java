@@ -4,11 +4,11 @@ import android.app.Application;
 
 public class SampleApplication extends Application {
 
-    public static ApplicationScopeDI injector;
+    public static ApplicationScopeDI appScope;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        injector = new ApplicationScopeDI(this);
+        appScope = new ApplicationScopeDI(this);
     }
 }
