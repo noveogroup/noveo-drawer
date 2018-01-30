@@ -1,5 +1,6 @@
 # Noveo Debug Drawer
-
+ [ ![Download](https://api.bintray.com/packages/noveo-nsk/maven/debugdrawer-base/images/download.svg) ](https://bintray.com/noveo-nsk/maven/debugdrawer-base/_latestVersion)
+ 
 Based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ideas from [Jake Wharton's u2020](https://github.com/JakeWharton/u2020).
 
 ## What's new
@@ -11,11 +12,11 @@ Based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ide
 
 ```groovy
 //Extension: Build Info Module
-implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.1'
+implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.3'
 
 //Extension: Build Config Module
-debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.1'
-releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1'
+debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.3'
+releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.3'
 
 //Debug Drawer https://github.com/palaima/DebugDrawer
 debugImplementation   'io.palaima.debugdrawer:debugdrawer:0.7.0'

@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: "com.noveogroup.android.check"
+apply plugin: 'com.noveogroup.android.check'
 
 android {
-    compileSdkVersion sdkVersions.compileSdk
-    buildToolsVersion sdkVersions.buildTools
+    compileSdkVersion config.sdk.compile
+    buildToolsVersion config.sdk.tools
 
     defaultConfig {
-        minSdkVersion sdkVersions.minSdk
-        targetSdkVersion sdkVersions.targetSdk
-        versionCode buildVersions.code
-        versionName buildVersions.name
+        minSdkVersion config.sdk.min
+        targetSdkVersion config.sdk.target
+        versionCode config.build.code
+        versionName config.build.name
     }
 
     buildTypes {
@@ -25,15 +25,15 @@ android {
     lintOptions {
         abortOnError true
         checkAllWarnings true
-        disable "AllowBackup"
-        disable "ContentDescription"
-        disable "InvalidPackage"
-        disable "RequiredSize"
-        disable "SpUsage"
-        disable "IconMissingDensityFolder"
-        disable "SelectableText"
-        disable "RtlCompat", "RtlEnabled", "RtlHardcoded", "RtlSymmetry"
-        disable "MissingPrefix"
+        disable 'AllowBackup'
+        disable 'ContentDescription'
+        disable 'InvalidPackage'
+        disable 'RequiredSize'
+        disable 'SpUsage'
+        disable 'IconMissingDensityFolder'
+        disable 'SelectableText'
+        disable 'RtlCompat', 'RtlEnabled', 'RtlHardcoded', 'RtlSymmetry'
+        disable 'MissingPrefix'
     }
 
     sourceSets {
@@ -51,18 +51,18 @@ android {
 
 dependencies {
     /* test dependencies */
-    testImplementation libraries.junit
-    testImplementation libraries.mockitoCore
+    testImplementation lib.junit
+    testImplementation lib.mockitoCore
 
     /* Support Libraries */
-    implementation libraries.supportAppCompat
+    implementation lib.supportAppCompat
 
     /* Logging */
-    implementation libraries.slf4j
+    implementation lib.slf4j
 
     /* Palamia DebugDrawer extension for*/
-    implementation libraries.debugDrawerBase
-    api project(":debugdrawer-base")
+    implementation lib.debugDrawerBase
+    api project(':debugdrawer-base')
 }
 
 check {

@@ -1,13 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion sdkVersions.compileSdk
+    compileSdkVersion config.sdk.compile
+    buildToolsVersion config.sdk.tools
 
     defaultConfig {
-        minSdkVersion sdkVersions.minSdk
-        targetSdkVersion sdkVersions.targetSdk
-        versionCode buildVersions.code
-        versionName buildVersions.name
+        minSdkVersion config.sdk.min
+        targetSdkVersion config.sdk.target
+        versionCode config.build.code
+        versionName config.build.name
     }
 
     buildTypes {
@@ -23,14 +24,14 @@ android {
     lintOptions {
         abortOnError true
         checkAllWarnings true
-        disable "AllowBackup"
-        disable "ContentDescription"
-        disable "InvalidPackage"
-        disable "SpUsage"
-        disable "IconMissingDensityFolder"
-        disable "SelectableText"
-        disable "RtlCompat", "RtlEnabled", "RtlHardcoded", "RtlSymmetry"
-        disable "MissingPrefix"
+        disable 'AllowBackup'
+        disable 'ContentDescription'
+        disable 'InvalidPackage'
+        disable 'SpUsage'
+        disable 'IconMissingDensityFolder'
+        disable 'SelectableText'
+        disable 'RtlCompat', 'RtlEnabled', 'RtlHardcoded', 'RtlSymmetry'
+        disable 'MissingPrefix'
     }
 
     compileOptions {
@@ -46,19 +47,15 @@ dependencies {
     debugApi project(':debugdrawer-buildconfig')
     releaseApi project(':debugdrawer-buildconfig-no-op')
 
-//    api "com.noveogroup:debugdrawer-buildinfo:0.0.1"
-//    debugApi "com.noveogroup:debugdrawer-buildconfig:0.0.1"
-//    releaseApi "com.noveogroup:debugdrawer-buildconfig-no-op:0.0.1"
-
     /* Palamia debug drawer */
-    api libraries.debugDrawerCommons
-    debugApi libraries.debugDrawer
-    releaseApi libraries.debugDrawerNoOp
-    debugApi libraries.debugDrawerView
-    releaseApi libraries.debugDrawerViewNoOp
+    api lib.debugDrawerCommons
+    debugApi lib.debugDrawer
+    releaseApi lib.debugDrawerNoOp
+    debugApi lib.debugDrawerView
+    releaseApi lib.debugDrawerViewNoOp
 
     /* Inspection Tools */
-    api libraries.stetho
-    debugApi libraries.leakCanary
-    releaseApi libraries.leakCanaryNoOp
+    api lib.stetho
+    debugApi lib.leakCanary
+    releaseApi lib.leakCanaryNoOp
 }

@@ -1,17 +1,18 @@
 apply plugin: 'com.android.application'
-apply plugin: "me.tatarka.retrolambda"
+apply plugin: 'me.tatarka.retrolambda'
 
 apply from: 'drawer.gradle'
 
 android {
-    compileSdkVersion sdkVersions.compileSdk
+    compileSdkVersion config.sdk.compile
+    buildToolsVersion config.sdk.tools
 
     defaultConfig {
-        applicationId "com.noveogroup.debugdrawer.sample"
-        minSdkVersion sdkVersions.minSdk
-        targetSdkVersion sdkVersions.targetSdk
-        versionCode buildVersions.code
-        versionName buildVersions.name
+        applicationId 'com.noveogroup.debugdrawer.sample'
+        minSdkVersion config.sdk.min
+        targetSdkVersion config.sdk.target
+        versionCode config.build.code
+        versionName config.build.name
         buildConfigField 'String', noveoDrawer.who, noveoDrawer.builderInfo()
         buildConfigField 'String', noveoDrawer.date, noveoDrawer.buildDate()
     }
@@ -27,24 +28,24 @@ android {
         }
     }
 
-    flavorDimensions "example"
+    flavorDimensions 'example'
     productFlavors {
         example001 {
-            dimension "example"
+            dimension 'example'
         }
     }
 
     lintOptions {
         abortOnError true
         checkAllWarnings true
-        disable "AllowBackup"
-        disable "ContentDescription"
-        disable "InvalidPackage"
-        disable "SpUsage"
-        disable "IconMissingDensityFolder"
-        disable "SelectableText"
-        disable "RtlCompat", "RtlEnabled", "RtlHardcoded", "RtlSymmetry"
-        disable "MissingPrefix"
+        disable 'AllowBackup'
+        disable 'ContentDescription'
+        disable 'InvalidPackage'
+        disable 'SpUsage'
+        disable 'IconMissingDensityFolder'
+        disable 'SelectableText'
+        disable 'RtlCompat', 'RtlEnabled', 'RtlHardcoded', 'RtlSymmetry'
+        disable 'MissingPrefix'
     }
 
     compileOptions {
@@ -56,19 +57,19 @@ android {
 
 dependencies {
     /* Support */
-    implementation libraries.supportLibrary
-    implementation libraries.supportAppCompat
+    implementation lib.supportLibrary
+    implementation lib.supportAppCompat
 
     /* Logging */
-    implementation libraries.slf4j
-    implementation libraries.logbackCore
-    implementation(libraries.logbackClassic) {
-        exclude group: "com.google.android", module: "android"
+    implementation lib.slf4j
+    implementation lib.logbackCore
+    implementation(lib.logbackClassic) {
+        exclude group: 'com.google.android', module: 'android'
     }
 
     /* UI */
-    implementation libraries.butterKnife
-    annotationProcessor libraries.butterKnifeCompiler
+    implementation lib.butterKnife
+    annotationProcessor lib.butterKnifeCompiler
 
     /* Library */
     debugImplementation project(':sample-drawer')

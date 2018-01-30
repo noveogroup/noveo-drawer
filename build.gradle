@@ -8,9 +8,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath gradlePlugins.android
-        classpath gradlePlugins.noveoCheck
-        classpath gradlePlugins.retrolambda
+        classpath plugin.android
+        classpath plugin.noveoCheck
+        classpath plugin.retrolambda
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -35,10 +35,6 @@ allprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
 
 gradle.taskGraph.beforeTask { task ->
