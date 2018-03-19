@@ -2,9 +2,7 @@ package com.noveogroup.debugdrawer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Created by avaytsekhovskiy on 06/12/2017.
- */
+
 final class OneTimeInitializer {
     private final AtomicBoolean isInitialized;
     private final Runnable action;

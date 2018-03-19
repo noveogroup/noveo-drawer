@@ -1,4 +1,3 @@
-
 package com.noveogroup.debugdrawer;
 
 import android.content.Context;

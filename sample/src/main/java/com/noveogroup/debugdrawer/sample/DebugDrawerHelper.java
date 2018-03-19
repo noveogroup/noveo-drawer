@@ -27,7 +27,9 @@ public final class DebugDrawerHelper {
     public static final String ENABLER_LEAK = "LeakCanary";
     public static final String SELECTOR_ENDPOINT = "Endpoint";
     public static final String SELECTOR_THEME = "App Theme";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugDrawerHelper.class);
+
     public final DebugBuildConfiguration configuration;
 
     DebugDrawerHelper(final Application application) {
@@ -50,52 +52,79 @@ public final class DebugDrawerHelper {
     }
 
     void initSelectorModule(final DebugBuildConfiguration configuration) {
-        final Selector endpointSelector = new Selector(SELECTOR_ENDPOINT,
-                "http://staging.noveogroup.com",
-                "http://production.noveogroup.com",
-                "http://test.noveogroup.com",
-                "http://mock.noveogroup.com");
-        final Selector themeSelector = new Selector(SELECTOR_THEME,
-                Theme.LIGHT.name(),
-                Theme.DARK.name(),
-                Theme.CUSTOM.name());
-
-        endpointSelector.setReleaseValue("http://production.noveogroup.com");
-        themeSelector.setReleaseValue(Theme.DARK.name());
+        final Selector endpointSelector = Selector.builder(SELECTOR_ENDPOINT)
+                .addValues(
+                        "http://staging.noveogroup.com",
+                        "http://production.noveogroup.com",
+                        "http://test.noveogroup.com",
+                        "http://mock.noveogroup.com"
+                )
+                .setInitialValue("http://test.noveogroup.com")//initial value for debug
+                .setReleaseValue("http://mock.noveogroup.com")//the only value for release
+                .build();
+        final Selector themeSelector = Selector.builder(SELECTOR_THEME)
+                .addValues(
+                        Theme.LIGHT.name(),
+                        Theme.DARK.name(),
+                        Theme.CUSTOM.name())
+                .setInitialValue(Theme.CUSTOM.name())
+                .setReleaseValue(Theme.DARK.name())
+                .build();
 
         SelectorModule.init(configuration,
                 endpointSelector, themeSelector);
     }
 
     void initEnablerModule(final DebugBuildConfiguration configuration, final Application application) {
-        final Enabler stethoEnabler = Enabler.create(ENABLER_STETHO, enabled -> {
-            LOGGER.info("init stetho {}", enabled);
-            if (enabled) {
-                Stetho.initializeWithDefaults(application);
-            }
-        });
-        final Enabler leakEnabler = Enabler.create(ENABLER_LEAK, enabled -> {
-            LOGGER.info("init leak canary {}", enabled);
-            if (enabled) {
-                LeakCanary.install(application);
-            }
-        });
-        final Enabler what = Enabler.create("What", enabled -> {
-            LOGGER.info("init what {}", enabled);
-        });
-        final Enabler ever = Enabler.create("Ever", enabled -> {
-            LOGGER.info("init ever {}", enabled);
-        });
-        final Enabler you = Enabler.create("You", enabled -> {
-            LOGGER.info("init you {}", enabled);
-        });
-        final Enabler want = Enabler.create("Want", enabled -> {
-            LOGGER.info("init want {}", enabled);
-        });
+        final Enabler stethoEnabler = Enabler.builder(ENABLER_STETHO,
+                enabled -> {
+                    LOGGER.info("init stetho {}", enabled);
+                    if (enabled) {
+                        Stetho.initializeWithDefaults(application);
+                    }
+                })
+                .setInitialValue(true)
+                .setReleaseValue(false)
+                .build();
 
-        ever.setReleaseValue(true);
-        you.setReleaseValue(true);
-        want.setReleaseValue(true);
+        final Enabler leakEnabler = Enabler.builder(
+                ENABLER_LEAK,
+                enabled -> {
+                    LOGGER.info("init leak canary {}", enabled);
+                    if (enabled) {
+                        LeakCanary.install(application);
+                    }
+                })
+                //initial and release - both true.
+                //.setInitialValue(false)
+                //.setReleaseValue(false)
+                .build();
+
+        final Enabler what = Enabler.builder(
+                "What",
+                enabled -> LOGGER.info("init what {}", enabled))
+                .setInitialValue(true) //initial and release - both true.
+                .build();
+
+        final Enabler ever = Enabler.builder(
+                "Ever",
+                enabled -> LOGGER.info("init ever {}", enabled))
+                .setInitialValue(true)
+                .setReleaseValue(false)
+                .build();
+
+        final Enabler you = Enabler.builder(
+                "You",
+                enabled -> LOGGER.info("init you {}", enabled))
+                .setInitialValue(true)
+                .setReleaseValue(false)
+                .build();
+
+        final Enabler want = Enabler.builder(
+                "Want",
+                enabled -> LOGGER.info("init want {}", enabled))
+                .setInitialValue(false) //initial and release - both false.
+                .build();
 
         EnablerModule.init(configuration,
                 stethoEnabler, leakEnabler,

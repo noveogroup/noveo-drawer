@@ -4,11 +4,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("checkstyle:interfaceistypecheck")
 public interface EnablerProvider extends SettingsAggregatorProvider<Boolean> {
+
+    Set<String> STRINGS = Collections.unmodifiableSet(new HashSet<>(0));
+
     EnablerProvider STUB = new EnablerProvider() {
         @Override
         public Set<String> names() {
-            return Collections.unmodifiableSet(new HashSet<>(0));
+            return STRINGS;
         }
 
         @Override
@@ -16,11 +20,6 @@ public interface EnablerProvider extends SettingsAggregatorProvider<Boolean> {
             return false;
         }
 
-        @Override
-        public Boolean readDefault(final String name) {
-            return false;
-        }
     };
 
-    Boolean readDefault(String name);
 }

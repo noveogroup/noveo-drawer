@@ -51,17 +51,17 @@ android {
 
 dependencies {
     /* test dependencies */
-    testImplementation lib.junit
-    testImplementation lib.mockitoCore
+    testApi lib.junit
+    testApi lib.mockitoCore
 
     /* Support Libraries */
-    implementation lib.supportAppCompat
+    api lib.supportAppCompat
 
     /* Logging */
-    implementation lib.slf4j
+    api lib.slf4j
 
     /* Palamia DebugDrawer extension for*/
-    implementation lib.debugDrawerBase
+    api lib.debugDrawerBase
     api project(':debugdrawer-base')
 }
 

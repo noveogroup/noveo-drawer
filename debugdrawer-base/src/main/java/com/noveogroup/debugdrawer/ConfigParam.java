@@ -5,10 +5,13 @@ class ConfigParam<T> {
     static final int HASHCODE_CONSTANT = 31;
 
     private final String name;
-    private T releaseValue;
+    private final T initialValue;
+    private final T releaseValue;
 
-    ConfigParam(final String name, final T releaseValue) {
+
+    ConfigParam(final String name, final T initialValue, final T releaseValue) {
         this.name = name;
+        this.initialValue = initialValue;
         this.releaseValue = releaseValue;
     }
 
@@ -44,7 +47,8 @@ class ConfigParam<T> {
         return releaseValue;
     }
 
-    public void setReleaseValue(final T releaseValue) {
-        this.releaseValue = releaseValue;
+    T getInitialValue() {
+        return initialValue;
     }
+
 }

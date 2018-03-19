@@ -5,25 +5,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by avaytsekhovskiy on 06/12/2017.
- */
 final class DrawerEnablerSettings implements EnablerProvider, SettingsWriter<Boolean> {
 
     private final PreferencesApi preferences;
-    private final Map<String, OneTimeInitializer> enablerMap;
-    private final Map<String, Boolean> releaseMap;
+    private final Map<String, EnablerDescriptor> descriptors;
 
     DrawerEnablerSettings(final PreferencesApi preferences,
                           final List<Enabler> enablers) {
         this.preferences = preferences;
-        this.enablerMap = new LinkedHashMap<>();
-        this.releaseMap = new LinkedHashMap<>();
+        this.descriptors = new LinkedHashMap<>();
 
         for (final Enabler enabler : enablers) {
-            releaseMap.put(enabler.getName(), enabler.getReleaseValue());
-            enablerMap.put(enabler.getName(), new OneTimeInitializer(
-                    () -> enabler.initialize(read(enabler.getName()))));
+            final OneTimeInitializer initializer = new OneTimeInitializer(
+                    () -> enabler.initialize(read(enabler.getName()))
+            );
+            descriptors.put(enabler.getName(), new EnablerDescriptor(enabler, initializer));
         }
 
         applyInitial();
@@ -31,30 +27,30 @@ final class DrawerEnablerSettings implements EnablerProvider, SettingsWriter<Boo
 
     @Override
     public void applyInitial() {
-        for (final String name : enablerMap.keySet()) {
-            enablerMap.get(name).initializeIfRequired();
+        for (final String name : descriptors.keySet()) {
+            descriptors.get(name).getInitializer().initializeIfRequired();
         }
     }
 
     @Override
     public Set<String> names() {
-        return enablerMap.keySet();
+        return descriptors.keySet();
     }
 
     @Override
     public Boolean read(final String name) {
-        return preferences.getEnablerByName(name, releaseMap.get(name)).read().or(false);
+        final EnablerDescriptor descriptor = descriptors.get(name);
+        return preferences.getEnablerByName(name, descriptor.getInitialValue())
+                .read()
+                .or(descriptor.getInitialValue());
     }
 
     @Override
     public void change(final String name, final Boolean value) {
-        preferences.getEnablerByName(name, releaseMap.get(name)).save(value);
+        final EnablerDescriptor descriptor = descriptors.get(name);
+        preferences.getEnablerByName(name, descriptor.getInitialValue())
+                .save(value);
         applyInitial();
     }
 
-    @Override
-    @SuppressWarnings("PMD")
-    public Boolean readDefault(final String name) {
-        return releaseMap.containsKey(name) ? releaseMap.get(name) : false;
-    }
 }

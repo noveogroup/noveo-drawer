@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,51 +13,51 @@
         android:layout_width="0dp"
         android:layout_columnSpan="2"
         android:layout_gravity="start|fill_horizontal"
-        android:text="Application Info"/>
+        android:text="Application Info" />
 
     <TextView
         style="@style/Widget.DebugDrawer.Base.RowTitle"
         android:layout_gravity="start|center_vertical"
-        android:text="Build Source"/>
+        android:text="Build Source" />
 
     <TextView
         android:id="@+id/dd_debug_application_build_source"
         style="@style/Widget.DebugDrawer.Base.RowValue"
         android:layout_width="0dp"
-        android:layout_gravity="start|center_vertical|fill_horizontal"/>
+        android:layout_gravity="start|center_vertical|fill_horizontal" />
 
     <TextView
         style="@style/Widget.DebugDrawer.Base.RowTitle"
         android:layout_gravity="start|center_vertical"
-        android:text="Build Date"/>
+        android:text="Build Date" />
 
     <TextView
         android:id="@+id/dd_debug_application_build_date"
         style="@style/Widget.DebugDrawer.Base.RowValue"
         android:layout_width="0dp"
         android:layout_gravity="start|center_vertical|fill_horizontal"
-        android:textSize="@dimen/dd_normal"/>
+        android:textSize="@dimen/dd_normal" />
 
     <TextView
         style="@style/Widget.DebugDrawer.Base.RowTitle"
         android:layout_gravity="start|center_vertical"
-        android:text="Build Flavor"/>
+        android:text="Build Flavor" />
 
     <TextView
         android:id="@+id/dd_debug_application_build_flavor"
         style="@style/Widget.DebugDrawer.Base.RowValue"
         android:layout_width="0dp"
-        android:layout_gravity="start|center_vertical|fill_horizontal"/>
+        android:layout_gravity="start|center_vertical|fill_horizontal" />
 
     <TextView
         style="@style/Widget.DebugDrawer.Base.RowTitle"
         android:layout_gravity="start|center_vertical"
-        android:text="Build Type"/>
+        android:text="Build Type" />
 
     <TextView
         android:id="@+id/dd_debug_application_build_type"
         style="@style/Widget.DebugDrawer.Base.RowValue"
         android:layout_width="0dp"
-        android:layout_gravity="start|center_vertical|fill_horizontal"/>
+        android:layout_gravity="start|center_vertical|fill_horizontal" />
 
 </GridLayout>

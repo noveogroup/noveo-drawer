@@ -1,50 +1,53 @@
 package com.noveogroup.debugdrawer;
 
 
-import android.util.Pair;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by avaytsekhovskiy on 06/12/2017.
- */
+
 final class DrawerSelectorSettings implements SelectorProvider {
 
-    private final Map<String, String> releaseMap;
-    private final Map<String, Pair<List<String>, OneTimeInitializer>> selectorMap;
+    private final Map<String, SelectorDescriptor> descriptors;
 
     DrawerSelectorSettings(final List<Selector> selectors) {
-        this.selectorMap = new LinkedHashMap<>();
-        this.releaseMap = new LinkedHashMap<>();
+        this.descriptors = new LinkedHashMap<>();
 
         for (final Selector selector : selectors) {
             final String name = selector.getName();
-            final List<String> values = selector.getValues();
-            final String releaseValue = selector.getReleaseValue();
-
-            releaseMap.put(name, releaseValue);
             final OneTimeInitializer initializer = new OneTimeInitializer(() -> {
             });
-            selectorMap.put(name, new Pair<>(values, initializer));
+            descriptors.put(name, new SelectorDescriptor(selector, initializer));
             initializer.initializeIfRequired();
         }
     }
 
     @Override
     public Set<String> names() {
-        return selectorMap.keySet();
+        return descriptors.keySet();
     }
 
     @Override
     public String read(final String name) {
-        return releaseMap.get(name);
+        return descriptors.get(name).getReleaseValue();
     }
 
     @Override
     public List<String> values(final String name) {
-        return selectorMap.get(name).first;
+        return descriptors.get(name).values;
     }
+
+    private static class SelectorDescriptor extends ConfigParam<String> {
+
+        final List<String> values;
+        final OneTimeInitializer initializer;
+
+        SelectorDescriptor(Selector selector, OneTimeInitializer initializer) {
+            super(selector.getName(), selector.getInitialValue(), selector.getReleaseValue());
+            this.values = selector.getValues();
+            this.initializer = initializer;
+        }
+    }
+
 }

@@ -4,10 +4,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by avaytsekhovskiy on 30/11/2017.
- */
-
 @SuppressWarnings("WeakerAccess")
 public final class BuildConfigDto {
 

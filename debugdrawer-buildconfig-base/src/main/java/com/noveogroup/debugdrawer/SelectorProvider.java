@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface SelectorProvider extends SettingsAggregatorProvider<String> {
+    Set<String> STRINGS = Collections.unmodifiableSet(new HashSet<>(0));
+
     SelectorProvider STUB = new SelectorProvider() {
         @Override
         public List<String> values(final String name) {
@@ -14,7 +16,7 @@ public interface SelectorProvider extends SettingsAggregatorProvider<String> {
 
         @Override
         public Set<String> names() {
-            return Collections.unmodifiableSet(new HashSet<>(0));
+            return STRINGS;
         }
 
         @Override

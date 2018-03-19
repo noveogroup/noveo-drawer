@@ -52,24 +52,24 @@ android {
 
 dependencies {
     /* test dependencies */
-    testImplementation lib.junit
-    testImplementation lib.mockitoCore
+    testApi lib.junit
+    testApi lib.mockitoCore
 
     /* Support Libraries */
-    implementation lib.supportAppCompat
+    api lib.supportAppCompat
 
     /* Logging */
-    implementation lib.slf4j
+    api lib.slf4j
 
     /* SharedPreferences */
-    implementation lib.noveoPreferences
+    api lib.noveoPreferences
 
     /* Process Rebirth */
-    implementation lib.phoenix
+    api lib.phoenix
 
     /* Palamia DebugDrawer extension for*/
-    implementation lib.debugDrawerBase
-    api project(':debugdrawer-base')
+    api lib.debugDrawerBase
+    api project(':debugdrawer-buildconfig-base')
 }
 
 check {

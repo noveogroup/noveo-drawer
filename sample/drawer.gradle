@@ -1,8 +1,8 @@
 ext.noveoDrawer = [
-        who   : "BUILD_SOURCE",
-        date  : "BUILD_DATE",
-        builderInfo : this.&extractApkBuilderInfo,
-        buildDate: this.&extractBuildDate
+        who        : "BUILD_SOURCE",
+        date       : "BUILD_DATE",
+        builderInfo: this.&extractApkBuilderInfo,
+        buildDate  : this.&extractBuildDate
 ]
 
 def extractApkBuilderInfo() {
@@ -28,5 +28,5 @@ def extractBuildDate() {
 }
 
 static def asBuildConfigParam(prop) {
-    return "\"$prop\"";
+    return "\"$prop\""
 }

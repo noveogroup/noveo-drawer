@@ -2,9 +2,7 @@ package com.noveogroup.debugdrawer;
 
 import java.util.Set;
 
-/**
- * Created by avaytsekhovskiy on 06/12/2017.
- */
+
 public interface SettingsAggregatorProvider<T> {
     Set<String> names();
 

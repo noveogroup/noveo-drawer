@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.noveogroup.android.check'
 
 android {
@@ -16,10 +15,17 @@ android {
     buildTypes {
         debug {
             debuggable true
+            matchingFallbacks = ['release']
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    variantFilter { variant ->
+        if (variant.buildType.name.endsWith('debug')) {
+            variant.setIgnore(true)
         }
     }
 
@@ -63,7 +69,7 @@ dependencies {
 
     /* Palamia DebugDrawer extension for*/
     api lib.debugDrawerBase
-    api project(':debugdrawer-buildconfig-base')
+    api project(':debugdrawer-base')
 }
 
 check {

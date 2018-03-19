@@ -23,9 +23,9 @@ def secrets = new Properties()
 secrets.load(new FileInputStream(rootProject.file("secret.properties")))
 
 ext.repo = [
-        user: secrets.getProperty(KEY_USER, "undefined_user"),
-        password: secrets.getProperty(KEY_PASS, "undefined_password"),
-        releaseUrl: hasProperty("RELEASE_REPOSITORY_URL") ? RELEASE_REPOSITORY_URL : "unknown_release_repo",
+        user       : secrets.getProperty(KEY_USER, "undefined_user"),
+        password   : secrets.getProperty(KEY_PASS, "undefined_password"),
+        releaseUrl : hasProperty("RELEASE_REPOSITORY_URL") ? RELEASE_REPOSITORY_URL : "unknown_release_repo",
         snapshotUrl: hasProperty("SNAPSHOT_REPOSITORY_URL") ? SNAPSHOT_REPOSITORY_URL : "unknown_snapshot_repo"
 ]
 
