@@ -12,11 +12,11 @@ Based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ide
 
 ```groovy
 //Extension: Build Info Module
-implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.3'
+implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.4'
 
-//Extension: Build Config Module
-debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.3'
-releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.3'
+//Extension: Build Config Module (implicit dependency on debugdrawer-buildconfig-base)
+debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.4'
+releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.4'
 
 //Debug Drawer https://github.com/palaima/DebugDrawer
 debugImplementation   'io.palaima.debugdrawer:debugdrawer:0.7.0'
@@ -72,14 +72,22 @@ configuration.enableDebug(); //to enable Slf4j logging
 ### EnablerModule
 
 ```java
-Enabler stetho = Enabler.create(ENABLER_STETHO, enabled -> {
-    if (enabled) Stetho.initializeWithDefaults(application);
-});
-Enabler leak = Enabler.create(ENABLER_LEAK, enabled -> {
-    if (enabled) LeakCanary.install(application);
-});
+Enabler stetho = Enabler.builder(ENABLER_STETHO, enabled -> {
+            if (enabled) {
+                Stetho.initializeWithDefaults(application));
+            }
+        })
+        .setInitialValue(true)
+        .setReleaseValue(false)
+        .build();
 
-stetho.setReleaseValue(true);
+Enabler leak = Enabler.builder(ENABLER_LEAK, enabled -> {
+            if (enabled) {
+                LeakCanary.install(application);
+            }
+        })
+        .setReleaseValue(true) //both initial & release values will be true in this case
+        .build();
 
 EnablerModule.init(configuration, stetho, leak, ...);
 ```
@@ -87,13 +95,15 @@ EnablerModule.init(configuration, stetho, leak, ...);
 ### SelectorModule
 
 ```java
-Selector endpoint = new Selector(SELECTOR_ENDPOINT,
+Selector endpoint = Selector.builder(SELECTOR_ENDPOINT)
+        .addValues(
             "http://staging.noveogroup.com",
             "http://production.noveogroup.com",
-            "http://mock.noveogroup.com");
-
-//Use this value for release build always.
-endpoint.setReleaseValue("http://production.noveogroup.com");
+            "http://mock.noveogroup.com"
+        )
+        .setInitialValue("http://staging.noveogroup.com")
+        .setReleaseValue("http://production.noveogroup.com")
+        .build();
 
 SelectorModule.init(configuration, endpoint, ...);
 ```
