@@ -25,5 +25,11 @@ public interface SelectorProvider extends SettingsAggregatorProvider<String> {
         }
     };
 
+    /**
+     * get all available values for named selector.
+     *
+     * @param name selector name which value you want.
+     * @return value of named selector.
+     */
     List<String> values(String name);
 }

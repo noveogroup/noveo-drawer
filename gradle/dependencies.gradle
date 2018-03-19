@@ -10,8 +10,7 @@ ext.versions = [
         noveoPreferences  : "0.0.3",
 
         /*APPLICATION DEPENDENCIES*/
-        supportLibrary    : "27.0.2",
-        supportAnnotations: "27.0.0",
+        supportLibrary    : "27.1.0",
         slf4j             : "1.7.25",
         logback           : "1.1.1-6",
         butterKnife       : "8.8.1",
@@ -45,7 +44,7 @@ ext.lib = [
         supportCoreUtils   : "com.android.support:support-core-utils:$versions.supportLibrary",
         supportCoreUi      : "com.android.support:support-core-ui:$versions.supportLibrary",
         supportAppCompat   : "com.android.support:appcompat-v7:$versions.supportLibrary",
-        supportAnnotations : "com.android.support:support-annotations:$versions.supportAnnotations",
+        supportAnnotations : "com.android.support:support-annotations:$versions.supportLibrary",
 
         /* Logger */
         slf4j              : "org.slf4j:slf4j-api:$versions.slf4j",

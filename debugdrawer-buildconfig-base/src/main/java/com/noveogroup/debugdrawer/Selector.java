@@ -7,7 +7,20 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-@SuppressWarnings("WeakerAccess")
+/**
+ * Selector describes an spinner UI item in DebugDrawer.
+ * <p>
+ * Spinner is a set of properties:
+ * <p>
+ * name - key in shared preferences
+ * values - string spinner values
+ * initialValue - value that spinner will use after first install
+ * releaseValue - value that spinner will always use in no-op / release build configuration
+ * <p>
+ * Note: by default initialValue & releaseValue is the very first value ( == values.get(0) )
+ * So you will get an IndexOutOfBoundException if there are no values provided before .build()
+ */
+@SuppressWarnings({"WeakerAccess", "PMD.UselessOverridingMethod"})
 public final class Selector extends ConfigParam<String> {
 
     final List<String> values;
@@ -68,7 +81,29 @@ public final class Selector extends ConfigParam<String> {
                     return checkValue;
                 }
             }
-            throw new IllegalArgumentException("value not in list");
+            throw new IllegalArgumentException("initial or release value not in list");
+        }
+
+        /**
+         * Note: by default the very first selector item will be used (values.get(0))
+         *
+         * @param value you want in DEBUG build after FIRST installation
+         * @return your builder to continue.
+         */
+        @Override
+        public SelectorBuilder initialValue(String initialValue) {
+            return super.initialValue(initialValue);
+        }
+
+        /**
+         * Note: by default the very first selector item will be used (values.get(0))
+         *
+         * @param value you want in RELEASE build at any circumstances
+         * @return your builder to continue.
+         */
+        @Override
+        public SelectorBuilder releaseValue(String releaseValue) {
+            return super.releaseValue(releaseValue);
         }
 
         public SelectorBuilder addValue(String value) {

@@ -46,10 +46,16 @@ public final class DebugBuildConfiguration {
         return rebirthExecutor;
     }
 
+    /**
+     * @return value provider for all Enablers in DebugDrawer.
+     */
     public EnablerProvider getEnablerProvider() {
         return Utils.firstNonNull(enablers, DrawerEnablerSettings.STUB);
     }
 
+    /**
+     * @return value provider for all Selectors in DebugDrawer.
+     */
     public SelectorProvider getSelectorProvider() {
         return Utils.firstNonNull(selectors, DrawerSelectorSettings.STUB);
     }

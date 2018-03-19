@@ -1,6 +1,7 @@
 package com.noveogroup.debugdrawer;
 
 
+@SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
 public abstract class ConfigParamBuilder<V, T extends ConfigParamBuilder<V, T>> {
     final String name;
     V initialValue;
@@ -11,12 +12,20 @@ public abstract class ConfigParamBuilder<V, T extends ConfigParamBuilder<V, T>> 
         this.name = name;
     }
 
-    public T setInitialValue(V initialValue) {
+    /**
+     * @param initialValue Value you want in DEBUG build after FIRST installation
+     * @return your builder to continue.
+     */
+    public T initialValue(V initialValue) {
         this.initialValue = initialValue;
         return getThis();
     }
 
-    public T setReleaseValue(V releaseValue) {
+    /**
+     * @param initialValue Value you want in RELEASE build at any circumstances
+     * @return your builder to continue.
+     */
+    public T releaseValue(V releaseValue) {
         this.releaseValue = releaseValue;
         return getThis();
     }
@@ -26,15 +35,8 @@ public abstract class ConfigParamBuilder<V, T extends ConfigParamBuilder<V, T>> 
     abstract T getThis();
 
     public Object build() {
-        if (initialValue == null && releaseValue == null) {
-            final V value = resolveIfNull();
-            initialValue = value;
-            releaseValue = value;
-        } else if (initialValue == null) {
-            initialValue = releaseValue;
-        } else {
-            releaseValue = initialValue;
-        }
+        initialValue = initialValue == null ? resolveIfNull() : initialValue;
+        releaseValue = releaseValue == null ? resolveIfNull() : releaseValue;
         return null;
     }
 
