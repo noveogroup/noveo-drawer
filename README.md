@@ -12,11 +12,11 @@ Based on [Android Debug Drawer](https://github.com/palaima/DebugDrawer) with ide
 
 ```groovy
 //Extension: Build Info Module
-implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.4'
+implementation        'com.noveogroup:debugdrawer-buildinfo:0.0.5'
 
 //Extension: Build Config Module (implicit dependency on debugdrawer-buildconfig-base)
-debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.4'
-releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.4'
+debugImplementation   'com.noveogroup:debugdrawer-buildconfig:0.0.5'
+releaseImplementation 'com.noveogroup:debugdrawer-buildconfig-no-op:0.0.5'
 
 //Debug Drawer https://github.com/palaima/DebugDrawer
 debugImplementation   'io.palaima.debugdrawer:debugdrawer:0.7.0'
@@ -77,8 +77,8 @@ Enabler stetho = Enabler.builder(ENABLER_STETHO, enabled -> {
                 Stetho.initializeWithDefaults(application));
             }
         })
-        .setInitialValue(true)
-        .setReleaseValue(false)
+        .initialValue(true)
+        .releaseValue(false)
         .build();
 
 Enabler leak = Enabler.builder(ENABLER_LEAK, enabled -> {
@@ -86,7 +86,7 @@ Enabler leak = Enabler.builder(ENABLER_LEAK, enabled -> {
                 LeakCanary.install(application);
             }
         })
-        .setReleaseValue(true) //both initial & release values will be true in this case
+        .releaseValue(true) //both initial & release values will be true in this case
         .build();
 
 EnablerModule.init(configuration, stetho, leak, ...);
@@ -98,11 +98,11 @@ EnablerModule.init(configuration, stetho, leak, ...);
 Selector endpoint = Selector.builder(SELECTOR_ENDPOINT)
         .addValues(
             "http://staging.noveogroup.com",
-            "http://production.noveogroup.com",
-            "http://mock.noveogroup.com"
+            "http://production.noveogroup.com"
         )
-        .setInitialValue("http://staging.noveogroup.com")
-        .setReleaseValue("http://production.noveogroup.com")
+        .addValue("http://mock.noveogroup.com")
+        .initialValue("http://staging.noveogroup.com")
+        .releaseValue("http://production.noveogroup.com")
         .build();
 
 SelectorModule.init(configuration, endpoint, ...);

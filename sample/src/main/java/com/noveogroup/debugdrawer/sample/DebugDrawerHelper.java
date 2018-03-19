@@ -59,16 +59,16 @@ public final class DebugDrawerHelper {
                         "http://test.noveogroup.com",
                         "http://mock.noveogroup.com"
                 )
-                .setInitialValue("http://test.noveogroup.com")//initial value for debug
-                .setReleaseValue("http://mock.noveogroup.com")//the only value for release
+                .initialValue("http://test.noveogroup.com")//initial value for debug
+                .releaseValue("http://mock.noveogroup.com")//the only value for release
                 .build();
         final Selector themeSelector = Selector.builder(SELECTOR_THEME)
                 .addValues(
                         Theme.LIGHT.name(),
                         Theme.DARK.name(),
                         Theme.CUSTOM.name())
-                .setInitialValue(Theme.CUSTOM.name())
-                .setReleaseValue(Theme.DARK.name())
+                .initialValue(Theme.CUSTOM.name())
+                .releaseValue(Theme.DARK.name())
                 .build();
 
         SelectorModule.init(configuration,
@@ -83,8 +83,8 @@ public final class DebugDrawerHelper {
                         Stetho.initializeWithDefaults(application);
                     }
                 })
-                .setInitialValue(true)
-                .setReleaseValue(false)
+                .initialValue(true)
+                .releaseValue(false)
                 .build();
 
         final Enabler leakEnabler = Enabler.builder(
@@ -96,34 +96,34 @@ public final class DebugDrawerHelper {
                     }
                 })
                 //initial and release - both true.
-                //.setInitialValue(false)
-                //.setReleaseValue(false)
+                //.initialValue(false)
+                //.releaseValue(false)
                 .build();
 
         final Enabler what = Enabler.builder(
                 "What",
                 enabled -> LOGGER.info("init what {}", enabled))
-                .setInitialValue(true) //initial and release - both true.
+                .initialValue(true) //initial and release - both true.
                 .build();
 
         final Enabler ever = Enabler.builder(
                 "Ever",
                 enabled -> LOGGER.info("init ever {}", enabled))
-                .setInitialValue(true)
-                .setReleaseValue(false)
+                .initialValue(true)
+                .releaseValue(false)
                 .build();
 
         final Enabler you = Enabler.builder(
                 "You",
                 enabled -> LOGGER.info("init you {}", enabled))
-                .setInitialValue(true)
-                .setReleaseValue(false)
+                .initialValue(true)
+                .releaseValue(false)
                 .build();
 
         final Enabler want = Enabler.builder(
                 "Want",
                 enabled -> LOGGER.info("init want {}", enabled))
-                .setInitialValue(false) //initial and release - both false.
+                .initialValue(false) //initial and release - both false.
                 .build();
 
         EnablerModule.init(configuration,
