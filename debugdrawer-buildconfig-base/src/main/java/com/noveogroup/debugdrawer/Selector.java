@@ -117,12 +117,12 @@ public final class Selector extends ConfigParam<String> {
         }
 
         @Override
-        public SelectorBuilder getThis() {
+        protected SelectorBuilder getThis() {
             return this;
         }
 
         @Override
-        String resolveIfNull() {
+        protected String resolveIfNull() {
             return values.get(0);
         }
 

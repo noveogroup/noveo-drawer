@@ -64,12 +64,12 @@ public abstract class Enabler extends ConfigParam<Boolean> {
         }
 
         @Override
-        public EnablerBuilder getThis() {
+        protected EnablerBuilder getThis() {
             return this;
         }
 
         @Override
-        public Boolean resolveIfNull() {
+        protected Boolean resolveIfNull() {
             return false;
         }
 

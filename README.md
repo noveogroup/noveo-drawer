@@ -86,7 +86,8 @@ Enabler leak = Enabler.builder(ENABLER_LEAK, enabled -> {
                 LeakCanary.install(application);
             }
         })
-        .releaseValue(true) //both initial & release values will be true in this case
+        //initial value by default still "false"
+        .releaseValue(true) 
         .build();
 
 EnablerModule.init(configuration, stetho, leak, ...);

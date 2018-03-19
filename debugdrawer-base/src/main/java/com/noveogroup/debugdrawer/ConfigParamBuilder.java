@@ -30,9 +30,9 @@ public abstract class ConfigParamBuilder<V, T extends ConfigParamBuilder<V, T>> 
         return getThis();
     }
 
-    abstract V resolveIfNull();
+    abstract protected V resolveIfNull();
 
-    abstract T getThis();
+    abstract protected T getThis();
 
     public Object build() {
         initialValue = initialValue == null ? resolveIfNull() : initialValue;
